@@ -1,0 +1,8 @@
+_chrome_browser = "./webdrivers/chromedriver.exe"
+_ie_browser = "./webdrivers/IEDriverServer.exe"
+_edge_browser = "./webdrivers/MicrosoftWebDriver.exe"
+_edge_browser_new = "./webdrivers/msedgedriver.exe"
+_firefox_browser = "./webdrivers/geckodriver.exe"
+_chrome_browser_mac = "./webdrivers/chromedriver_mac"
+_firefox_browser_mac = "./webdrivers/geckodriver_mac"
+_edge_browser_linux = "./webdrivers/msedgedriver_linux"
