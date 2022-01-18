@@ -8,7 +8,7 @@ from pages.plp import PlpPage
 from utils.utils import Utils
 
 
-scenarios('../features', features_base_dir='tests/features')
+scenarios('../../features/bvt', features_base_dir='tests/features/bvt')
 
 default_wait_time = ReadConfig.get_max_wait_time()
 store_url = ReadConfig.get_url()

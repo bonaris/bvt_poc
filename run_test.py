@@ -10,4 +10,4 @@ class MyPlugin:
         print("\n\t*** test run reporting finishing")
 
 
-pytest.main(["-x",  "--html", test_results_file, "--self-contained-html", "--browser", "chrome", "tests/steps"], plugins=[MyPlugin()])
+pytest.main(["-x",  "--html", test_results_file, "--self-contained-html", "--browser", "chrome", "tests/steps/bvt"], plugins=[MyPlugin()])
