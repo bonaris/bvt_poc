@@ -24,18 +24,12 @@ class PlpPage(BasePage):
 
     def __init__(self, driver):
         self.driver = driver
-        self.initial_products_in_grid = ReadConfig.get_value_by_keys("test-info", "initial_products_in_grid")
-        self.expected_header = locators.find_test_data(locators_file, "PLP_Page", "header").get("expected")
-        self.get_header_text()
-        self.get_product_grid()
-        self.get_filters()
+        self.refresh()
 
     def get_header_text(self):
         self.header_text = ""
-        header_locator_info = locators.find_test_data(locators_file, "PLP_Page", "header")
         try:
-            self.header_text = Utils.visible(driver=self.driver, condition=(header_locator_info.get("By"), header_locator_info.get("locator")),
-                          wait=2).text
+            self.header_text = self.visible_clickable_new("PLP_Page", "header", 5).text
         except Exception:
             Logger.log_warning("PLP Page: could not read header")
         return self.header_text
@@ -50,10 +44,9 @@ class PlpPage(BasePage):
         )
 
     def get_product_grid(self):
-        product_grid_info = locators.find_test_data(locators_file, "PLP_Page", "productList")
+        self.product_list = []
         try:
-            self.product_grid_elements = self.driver.find_elements(product_grid_info.get("By"), product_grid_info.get("locator"))
-            self.product_list = []
+            self.product_grid_elements = self.find_all_elements("PLP_Page", "productList", 5)
             for product_element in self.product_grid_elements:
                 product = Product()
                 product.map_from_plp_element(product_element)
@@ -63,14 +56,8 @@ class PlpPage(BasePage):
         return self.product_grid_elements
 
     def get_filters(self):
-        filter_info = locators.find_test_data(locators_file, "PLP_Page", "filters")
-        filter_label_info = locators.find_test_data(locators_file, "PLP_Page", "filterLabel")
-        self.filter_label = Utils.visible_clickable(
-            driver=self.driver,
-            condition=(filter_label_info.get("By"), filter_label_info.get("locator")),
-            wait=2
-        )
-        total_elements = self.driver.find_elements(filter_info.get("By"), filter_info.get("locator"))
+        self.filter_label = self.visible_clickable_new("PLP_Page", "filterLabel", 5)
+        total_elements = self.find_all_elements("PLP_Page", "filters")
         self.filter_list = []
         self.filter_list_elements = []
         for el in total_elements:
@@ -80,10 +67,15 @@ class PlpPage(BasePage):
 
     def select_color_filter(self, color):
         try:
-            color_info = locators.find_test_data(locators_file, "PLP_Page", color)
-            Logger.log_info(f'selecting color filter: {color_info.get("expected")}')
+            Logger.log_info(f'selecting color filter: {color}')
             self.filter_list_elements[0].click()
-            self.visible_clickable(condition=(color_info.get("By"), color_info.get("locator"))).click()
+            self.click_on_element("PLP_Page", color, 3)
         except Exception:
-            Logger.log_warning(f"could not select {color_info.get('expected')}")
+            Logger.log_warning(f"could not select {color}")
 
+    def refresh(self):
+        self.initial_products_in_grid = ReadConfig.get_value_by_keys("test-info", "initial_products_in_grid")
+        self.expected_header = locators.find_test_data(locators_file, "PLP_Page", "header").get("expected")
+        self.get_header_text()
+        self.get_product_grid()
+        self.get_filters()

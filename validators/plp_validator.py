@@ -12,11 +12,10 @@ max_wait_time = ReadConfig.get_max_wait_time()
 class Validator(BaseValidator):
 
     @staticmethod
-    def validate_header(driver, actual, expected):
+    def validate_header(actual, expected):
         result = True
         if not BaseValidator.validate_values(actual, expected, field_name="PLP Header Text"):
             result = False
-            Utils.save_screenshot(driver=driver, tc_name='plp_page', frame_name='header')
         return result
 
     @staticmethod

@@ -35,6 +35,6 @@ def useremail(request):
     return request.config.getoption("--useremail")
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='session')
 def context():
     return {}

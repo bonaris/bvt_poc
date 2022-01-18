@@ -2,8 +2,9 @@ Feature: Guest user should be able to add products to cart and checkout
 
 
 
-  Scenario: TC-01 Guest user should be able to add products to cart using PLP Page
+  Scenario: Guest user should be able to add products to cart using PLP Page
     Given Z Gallerie website should be up and running
+
     When user provides Meganav to get to a PLP, for example "Tabletop > Serveware & Flatware"
     Then PLP is displayed as per selection
     And Product Grid is displayed on the page
@@ -11,7 +12,6 @@ Feature: Guest user should be able to add products to cart and checkout
     And there are filters like: color, price range
     And there is a dropdown for color filter to select best match
 
-  Scenario: TC-01-2
     When user selects one of the colors in a filter
     Then Product List is updated based on the best match
 
