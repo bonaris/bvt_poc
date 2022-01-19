@@ -25,7 +25,7 @@ class BasePage:
     def visible_clickable(self, condition, wait=max_wait_time):
         elem = WebDriverWait(self.driver, wait).until(EC.presence_of_element_located(condition))
         try:
-            elem = WebDriverWait(self.driver, max_wait_time).until(EC.element_to_be_clickable(condition))
+            elem = WebDriverWait(self.driver, wait).until(EC.element_to_be_clickable(condition))
         except Exception as e:
             Logger.log_warning(f"element_to_be_clickable failed for condition {str(condition)}")
         time.sleep(3)

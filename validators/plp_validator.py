@@ -46,3 +46,15 @@ class Validator(BaseValidator):
         if not BaseValidator.validate_values(actual=filters[1], expected='Price Range', field_name="Filter by Price Range"):
             result = False
         return result
+
+    @staticmethod
+    def validate_breadcrumbs(actual_list, expected, separator='/'):
+        result = True
+        expected_list = expected.split(separator)
+
+        if BaseValidator.validate_values(len(actual_list), len(expected_list), "Total breadcrumbs items"):
+            if not BaseValidator.validate_values(str(actual_list), str(expected_list), "Breadcrumbs items"):
+                result = False
+        else:
+            result = False
+        return result

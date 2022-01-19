@@ -71,5 +71,5 @@ if __name__ == '__main__':
     TestExecutor.run_tests(
         browser='chrome',
         # mode='pixel',
-        testcase_class='test_01.py'
+        testcase_class='test_bvt_01.py'
     )

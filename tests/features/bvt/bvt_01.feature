@@ -13,7 +13,10 @@ Feature: Guest user should be able to add products to cart and checkout
     And there is a dropdown for color filter to select best match
 
     When user selects one of the colors in a filter
+    When user selects one of the price-range in a filter
     Then Product List is updated based on the best match
+    And breadcrumbs links are available on the page
+
 
 #    And there is a dropdown for color filter to select best match
 #    When user scrolls down a page or two and selects a product by clicking on it

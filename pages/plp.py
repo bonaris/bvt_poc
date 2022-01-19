@@ -21,9 +21,13 @@ class PlpPage(BasePage):
     filter_list = []
     filter_label = None
     filter_colors = {'Black': 'select Black', 'Gold': 'select Gold', 'Pink': 'select Pink', 'Grey': 'select Grey', 'White': 'select White'}
+    breadcrumbs_list = []
+    breadcrumbs_list_elements = []
 
     def __init__(self, driver):
         self.driver = driver
+        self.initial_products_in_grid = ReadConfig.get_value_by_keys("test-info", "initial_products_in_grid")
+        self.expected_header = locators.find_test_data(locators_file, "PLP_Page", "header").get("expected")
         self.refresh()
 
     def get_header_text(self):
@@ -57,7 +61,7 @@ class PlpPage(BasePage):
 
     def get_filters(self):
         self.filter_label = self.visible_clickable_new("PLP_Page", "filterLabel", 5)
-        total_elements = self.find_all_elements("PLP_Page", "filters")
+        total_elements = self.find_all_elements("PLP_Page", "filters", 5)
         self.filter_list = []
         self.filter_list_elements = []
         for el in total_elements:
@@ -69,16 +73,23 @@ class PlpPage(BasePage):
         try:
             Logger.log_info(f'selecting color filter: {color}')
             self.filter_list_elements[0].click()
-            self.click_on_element("PLP_Page", color, 3)
+            self.click_on_element("PLP_Page", color, 5)
         except Exception:
             Logger.log_warning(f"could not select {color}")
 
+    def select_price_filter(self, price_range):
+        try:
+            Logger.log_info(f'selecting price filter: {price_range}')
+            self.filter_list_elements[1].click()
+            self.click_on_element("PLP_Page", price_range, 5)
+        except Exception:
+            Logger.log_warning(f"could not select {price_range}")
+
     def refresh(self):
-        self.initial_products_in_grid = ReadConfig.get_value_by_keys("test-info", "initial_products_in_grid")
-        self.expected_header = locators.find_test_data(locators_file, "PLP_Page", "header").get("expected")
         self.get_header_text()
         self.get_product_grid()
         self.get_filters()
+        self.get_breadcrumbs_links()
 
     def get_current_filter(self):
         current_filter_elements = []
@@ -90,3 +101,13 @@ class PlpPage(BasePage):
         except Exception as e:
             Logger.log_warning(f"could not find current filters.")
         return current_filter_elements
+
+    def get_breadcrumbs_links(self):
+        elements = self.find_all_elements("PLP_Page", "breadcrumb")
+        self.breadcrumbs_list_elements = []
+        self.breadcrumbs_list = []
+        for element in elements:
+            if len(element.text) > 0:
+                self.breadcrumbs_list_elements.append(element)
+                self.breadcrumbs_list.append(element.text.strip())
+        return self.breadcrumbs_list_elements

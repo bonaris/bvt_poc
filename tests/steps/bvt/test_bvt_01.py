@@ -61,19 +61,34 @@ def validate_filters(context):
 def filter_drop_down(context):
     plp_page = context['plp_page']
     Validator.validate_values((plp_page.filter_list_elements[0] is not None), True, "Color Filter is available")
-    return plp_page
 
 
 @when(u'user selects one of the colors in a filter')
 def select_color(context):
     plp_page = context['plp_page']
-    plp_page.select_color_filter(plp_page.filter_colors.get("Black"))
+    plp_page.select_color_filter(test_data_record.get("Color Filter"))
+    time.sleep(5)
+
+
+@when(u'user selects one of the price-range in a filter')
+def select_price(context):
+    plp_page = context['plp_page']
+    plp_page.select_price_filter(test_data_record.get("Price Filter"))
+    time.sleep(5)
 
 
 @then(u'Product List is updated based on the best match')
-def validate_color_filter(context):
+def validate_filter(context):
     plp_page = context['plp_page']
-    assert len(plp_page.get_current_filter()) > 0
+    Validator.validate_values(len(plp_page.get_product_grid()), test_data_record.get("Filtered Products"), "Filtered Products")
+
+
+@then(u'breadcrumbs links are available on the page')
+def validate_filter(context):
+    plp_page = context['plp_page']
+    plp_page.get_breadcrumbs_links()
+    Validator.validate_breadcrumbs(plp_page.breadcrumbs_list, test_data_record.get('Expected Breadcrumb'))
+
 
 #
 # @when(u'user scrolls down a page or two and selects a product by clicking on it')
