@@ -3,6 +3,7 @@ import utils.excel_data_utils as locators
 from utils.logger import Logger
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 from utils.read_config import ReadConfig
 
 locators_file = ReadConfig.get_locators_filename()
@@ -48,7 +49,8 @@ class BasePage:
         for element_info in element_info_list:
             try:
                 element = self.visible_clickable(condition=(element_info.get("By"), element_info.get("locator")), wait=wait)
-                break
+                if element is not None:
+                    break
             except Exception:
                 Logger.log_warning(f'Could not find element by {element_info.get("By")} and locator {element_info.get("locator")}. Update {key} data in {tab_name} table')
         return element
@@ -65,3 +67,9 @@ class BasePage:
             except Exception:
                 Logger.log_warning(f'Could not find element by {element_info.get("By")} and locator {element_info.get("locator")}. Update {key} data in {tab_name} table')
         return elements
+
+    def click_page_down(self, pages=1):
+        element = self.driver.find_element_by_tag_name("body")
+        for i in range(pages):
+            element.send_keys(Keys.PAGE_DOWN)
+            time.sleep(1)

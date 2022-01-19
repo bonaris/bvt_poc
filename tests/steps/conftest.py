@@ -5,11 +5,9 @@ from utils.browser_utils import create_browser_instance
 
 @pytest.fixture
 def driver(request, browser, mode, useremail):
-
     driver = create_browser_instance(browser, mode)
     if request.cls is not None:
         request.cls.driver = driver
-
     yield driver
     driver.quit()
 

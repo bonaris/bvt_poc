@@ -13,6 +13,8 @@ class Product:
     details_dimensions = None
     other_info = None
     quick_look = None
+    availability = None
+    quantity = None
 
     def to_string(self):
         data_dictionary = {
@@ -24,6 +26,8 @@ class Product:
             "reviews": self.reviews,
             "description": self.description,
             "details_dimensions": self.details_dimensions,
+            "availability": self.availability,
+            "quantity": self.quantity,
             "other_info": self.other_info
         }
         return str(data_dictionary)
@@ -38,3 +42,8 @@ class Product:
             self.sale_price = values[3]
             self.quick_look = values[4]
 
+    def map_from_pdp_element(self, element_list, quantity=1):
+        self.dimensions = element_list[0].text.split('\n')[1]
+        self.availability = element_list[1].text.split('\n')[1]
+        self.sku = element_list[2].text.split('\n')[1]
+        self.quantity = quantity

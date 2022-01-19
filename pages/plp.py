@@ -22,7 +22,7 @@ class PlpPage(BasePage):
     filter_label = None
     filter_colors = {'Black': 'select Black', 'Gold': 'select Gold', 'Pink': 'select Pink', 'Grey': 'select Grey', 'White': 'select White'}
     breadcrumbs_list = []
-    breadcrumbs_list_elements = []
+    breadcrumbs_list_elements = {}
 
     def __init__(self, driver):
         self.driver = driver
@@ -104,10 +104,17 @@ class PlpPage(BasePage):
 
     def get_breadcrumbs_links(self):
         elements = self.find_all_elements("PLP_Page", "breadcrumb")
-        self.breadcrumbs_list_elements = []
         self.breadcrumbs_list = []
         for element in elements:
             if len(element.text) > 0:
-                self.breadcrumbs_list_elements.append(element)
+                self.breadcrumbs_list_elements.update({element.text.strip(): element})
                 self.breadcrumbs_list.append(element.text.strip())
         return self.breadcrumbs_list_elements
+
+    def click_breadcrumb(self, name):
+        self.breadcrumbs_list_elements.get(name).click()
+
+    def click_on_random_product(self):
+        product_selected = Utils.get_random_list_element(self.product_list)
+        product_selected.element.click()
+        return product_selected
