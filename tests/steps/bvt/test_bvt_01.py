@@ -13,6 +13,7 @@ scenarios('../../features/bvt', features_base_dir='tests/features/bvt')
 default_wait_time = ReadConfig.get_max_wait_time()
 store_url = ReadConfig.get_url()
 test_data_filename = ReadConfig.get_test_data_filename()
+test_data_record = test_data.find_test_data(test_data_filename, 'BVT', 'bvt-01')
 
 
 @given('Z Gallerie website should be up and running')
@@ -24,8 +25,7 @@ def open_home_page(driver, context):
 
 @when('user provides Meganav to get to a PLP, for example "Tabletop > Serveware & Flatware"')
 def open_url(context):
-    meganav_path = test_data.find_test_data(filename=test_data_filename, tab_name="Meganav", search_key="Tabletop > Serveware & Flatware").get("Path")
-    full_url = store_url + meganav_path
+    full_url = store_url + test_data_record.get('Meganav1')
     Logger.log_info(f"Navigating to {full_url} ***")
     context['driver'].get(full_url)
     time.sleep(default_wait_time//20)
@@ -35,7 +35,7 @@ def open_url(context):
 def validate_plp_header(context):
     context['plp_page'] = PlpPage(context['driver'])
     Utils.save_screenshot(context['driver'], tc_name='plp_page', frame_name='header')
-    Validator.validate_header(actual=context['plp_page'].get_header_text(), expected=context['plp_page'].expected_header)
+    Validator.validate_header(actual=context['plp_page'].get_header_text(), expected=test_data_record.get('Expected Header'))
 
 
 @then('Product Grid is displayed on the page')
@@ -71,8 +71,10 @@ def select_color(context):
 
 
 @then(u'Product List is updated based on the best match')
-def validate_drop(context):
-    assert True
+def validate_color_filter(context):
+    plp_page = context['plp_page']
+    assert len(plp_page.get_current_filter()) > 0
+
 #
 # @when(u'user scrolls down a page or two and selects a product by clicking on it')
 # def step_impl(context):

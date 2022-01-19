@@ -79,3 +79,14 @@ class PlpPage(BasePage):
         self.get_header_text()
         self.get_product_grid()
         self.get_filters()
+
+    def get_current_filter(self):
+        current_filter_elements = []
+        try:
+            all_elements = self.find_all_elements("PLP_Page", "current filter", 4)
+            for element in all_elements:
+                if len(element.text) > 0:
+                    current_filter_elements.append(element)
+        except Exception as e:
+            Logger.log_warning(f"could not find current filters.")
+        return current_filter_elements
