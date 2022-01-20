@@ -38,6 +38,10 @@ class PdpPage(BasePage):
             self.product.description = extra_info_content[0].text
             self.product.details_dimensions = extra_info_content[1].text
             self.product.other_info = extra_info_content[2].text
+            self.product.original_price = self.visible_clickable_new("PDP_Page", "original price", 3).text
+            self.product.sale_price = self.visible_clickable_new("PDP_Page", "sale price", 3).text
+            # ToDo: Add star rating and reviews here star rating class already in
+            #  locators in PDP_Page tab, key = 'star rating'
         except Exception:
             Logger.log_warning("PDP Page: Could not update Product info. ")
 

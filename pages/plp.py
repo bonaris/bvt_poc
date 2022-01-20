@@ -1,3 +1,5 @@
+import time
+
 import utils.excel_data_utils as locators
 from utils.read_config import ReadConfig
 from utils.logger import Logger
@@ -5,6 +7,7 @@ from validators.base_validator import BaseValidator
 from utils.utils import Utils
 from data_types.product import Product
 from pages.base_page import BasePage
+from pages.pdp import PdpPage
 
 
 locators_file = ReadConfig.get_locators_filename()
@@ -21,8 +24,6 @@ class PlpPage(BasePage):
     filter_list = []
     filter_label = None
     filter_colors = {'Black': 'select Black', 'Gold': 'select Gold', 'Pink': 'select Pink', 'Grey': 'select Grey', 'White': 'select White'}
-    breadcrumbs_list = []
-    breadcrumbs_list_elements = {}
 
     def __init__(self, driver):
         self.driver = driver
@@ -102,19 +103,24 @@ class PlpPage(BasePage):
             Logger.log_warning(f"could not find current filters.")
         return current_filter_elements
 
-    def get_breadcrumbs_links(self):
-        elements = self.find_all_elements("PLP_Page", "breadcrumb")
-        self.breadcrumbs_list = []
-        for element in elements:
-            if len(element.text) > 0:
-                self.breadcrumbs_list_elements.update({element.text.strip(): element})
-                self.breadcrumbs_list.append(element.text.strip())
-        return self.breadcrumbs_list_elements
-
-    def click_breadcrumb(self, name):
-        self.breadcrumbs_list_elements.get(name).click()
-
     def click_on_random_product(self):
         product_selected = Utils.get_random_list_element(self.product_list)
         product_selected.element.click()
         return product_selected
+
+    def find_and_click_on_available_product(self, gift_wrapping=False):
+        pdp_page = None
+        for product in self.product_list:
+            product.element.click()
+            time.sleep(max_wait_time//6)
+            pdp_page = PdpPage(driver=self.driver, product=product)
+            if "In Stock" in pdp_page.product.availability:
+                break
+            elif "Delivered in" in pdp_page.product.availability:
+                break
+            else:
+                pdp_page = None
+        return pdp_page
+
+
+

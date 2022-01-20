@@ -21,6 +21,7 @@ class Product:
             "sku": self.sku,
             "name": self.name,
             "price": self.original_price,
+            "sale price": self.sale_price,
             "dimensions": self.dimensions,
             "rating": self.rating,
             "reviews": self.reviews,

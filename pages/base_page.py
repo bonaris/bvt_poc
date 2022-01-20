@@ -9,9 +9,12 @@ from utils.read_config import ReadConfig
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
 
+
 class BasePage:
 
     driver = None
+    breadcrumbs_list = []
+    breadcrumbs_list_elements = {}
 
     def switch_v2_co_iframe(self, by='xpath', locator="//*[@id='checkoutV2']", wait=max_wait_time):
         try:
@@ -84,3 +87,14 @@ class BasePage:
             Logger.log_warning(
                 f'Could not find element {key} in tab {tab_name}. Update {key} data in {tab_name} table')
 
+    def get_breadcrumbs_links(self):
+        elements = self.find_all_elements("Page", "breadcrumb")
+        self.breadcrumbs_list = []
+        for element in elements:
+            if len(element.text) > 0:
+                self.breadcrumbs_list_elements.update({element.text.strip(): element})
+                self.breadcrumbs_list.append(element.text.strip())
+        return self.breadcrumbs_list_elements
+
+    def click_breadcrumb(self, name):
+        self.breadcrumbs_list_elements.get(name).click()
