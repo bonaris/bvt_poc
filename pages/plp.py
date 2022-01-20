@@ -110,6 +110,7 @@ class PlpPage(BasePage):
 
     def find_and_click_on_available_product(self, gift_wrapping=False):
         pdp_page = None
+        self.click_page_down(2)
         for product in self.product_list:
             product.element.click()
             time.sleep(max_wait_time//6)

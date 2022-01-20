@@ -77,9 +77,15 @@ class BasePage:
             element.send_keys(Keys.PAGE_DOWN)
             time.sleep(1)
 
+    def click_page_up(self, pages=1):
+        element = self.driver.find_element_by_tag_name("body")
+        for i in range(pages):
+            element.send_keys(Keys.PAGE_UP)
+            time.sleep(1)
+
     def input_text(self, tab_name, key, text, field_length=1, wait=max_wait_time):
         try:
-            element = self.find_all_elements(tab_name=tab_name, key=key, wait=wait)
+            element = self.visible_clickable_new(tab_name=tab_name, key=key, wait=wait)
             for i in range(field_length):
                 element.send_keys(Keys.BACKSPACE)
             element.send_keys(text)
@@ -98,3 +104,15 @@ class BasePage:
 
     def click_breadcrumb(self, name):
         self.breadcrumbs_list_elements.get(name).click()
+
+    def switch_to_frame(self, tab_name, key, wait=max_wait_time):
+        element_info_list = locators.find_all_records(locators_file, tab_name, key)
+        for element_info in element_info_list:
+            try:
+                self.switch_v2_co_iframe(
+                    by=element_info.get("By"),
+                    locator=element_info.get("locator"),
+                    wait=wait)
+                break
+            except Exception:
+                Logger.log_warning(f"Frame {key} is not found. Check tab {tab_name} in locator file {locators_file}")

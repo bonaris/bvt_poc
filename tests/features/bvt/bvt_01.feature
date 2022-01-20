@@ -27,9 +27,10 @@ Feature: Guest user should be able to add products to cart and checkout
     Then PDP page is displayed for selected product
     And  And it is the same product as selected from PLP
     And SKU of selected product is displayed
-#    When user clicks button 'Add to Cart'
+
+    When user clicks button Add to Cart
+    Then drop down cart frame is displayed
 #    And selects attributes like size & fabric, where applicable
-#    Then product(s) should be added to the cart
 #    And an overlay should be displayed confirming the qty of product(s) added to cart
 #    And price and total should be displayed and calculated as expected
 

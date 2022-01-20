@@ -7,7 +7,7 @@ from validators.base_validator import BaseValidator
 from utils.utils import Utils
 from data_types.product import Product
 from pages.base_page import BasePage
-
+from pages.cart import Cart
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
@@ -53,3 +53,9 @@ class PdpPage(BasePage):
             field_length=1,
             wait=max_wait_time//10
         )
+
+    def add_to_cart(self):
+        self.click_page_up()
+        self.click_on_element("PDP_Page", "add to cart button")
+        cart = Cart(driver=self.driver, product=self.product)
+        return cart

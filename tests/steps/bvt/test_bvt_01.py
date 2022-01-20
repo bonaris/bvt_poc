@@ -158,9 +158,7 @@ def scroll_select(context):
     plp_page.click_page_down(pages=3)
     time.sleep(2)
     plp_page.get_product_grid()
-#    product_selected = plp_page.click_on_random_product()
     time.sleep(default_wait_time/5)
-#    pdp_page = PdpPage(driver=context['driver'], product=product_selected)
     pdp_page = plp_page.find_and_click_on_available_product()
     Logger.log_info(f'Product selected: {pdp_page.product.to_string()}')
     context["selected_products"] = {"first": pdp_page.product}
@@ -186,3 +184,24 @@ def validate_correct_product_selected(context):
 def validate_correct_product_selected(context):
     pdp_page = context['pdp_page']
     assert PdpValidator.validate_not_empty(value=pdp_page.product.sku, field_name="SKU is not empty")
+
+
+@when(u'user clicks button Add to Cart')
+def add_to_cart(context):
+    pdp_page = context['pdp_page']
+    cart_page = pdp_page.add_to_cart()
+    Logger.log_info(f"Product {pdp_page.product.to_string()} added to the cart")
+    cart_page.input_text(
+        tab_name='Cart_Page',
+        key='quantity input',
+        text=2,
+        field_length=3,
+        wait=3
+    )
+    context['cart_page'] = cart_page
+
+
+@then(u'drop down cart frame is displayed')
+def validate_cart_dropdown(context):
+    cart_page = context['cart_page']
+    assert True
