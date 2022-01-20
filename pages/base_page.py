@@ -73,3 +73,14 @@ class BasePage:
         for i in range(pages):
             element.send_keys(Keys.PAGE_DOWN)
             time.sleep(1)
+
+    def input_text(self, tab_name, key, text, field_length=1, wait=max_wait_time):
+        try:
+            element = self.find_all_elements(tab_name=tab_name, key=key, wait=wait)
+            for i in range(field_length):
+                element.send_keys(Keys.BACKSPACE)
+            element.send_keys(text)
+        except Exception:
+            Logger.log_warning(
+                f'Could not find element {key} in tab {tab_name}. Update {key} data in {tab_name} table')
+

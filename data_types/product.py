@@ -43,7 +43,11 @@ class Product:
             self.quick_look = values[4]
 
     def map_from_pdp_element(self, element_list, quantity=1):
-        self.dimensions = element_list[0].text.split('\n')[1]
-        self.availability = element_list[1].text.split('\n')[1]
-        self.sku = element_list[2].text.split('\n')[1]
+        for element in element_list:
+            if "Availability" in element.text:
+                self.availability = element.text.split('\n')[1]
+            elif "Dimensions" in element.text:
+                self.dimensions = element.text.split('\n')[1]
+            elif "SKU":
+                self.sku = element.text.split('\n')[1]
         self.quantity = quantity

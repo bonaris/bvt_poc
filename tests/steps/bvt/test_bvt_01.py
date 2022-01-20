@@ -158,16 +158,15 @@ def step_impl(context):
     time.sleep(2)
     plp_page.get_product_grid()
     product_selected = plp_page.click_on_random_product()
-    Logger.log_info(f'Product selected: {product_selected.to_string()}')
     time.sleep(default_wait_time/5)
     pdp_page = PdpPage(driver=context['driver'], product=product_selected)
+    Logger.log_info(f'Product selected: {pdp_page.product.to_string()}')
     context['pdp_page'] = pdp_page
 
 
 @then(u'PDP page is displayed for selected product')
 def step_impl(context):
     pdp_page = context['pdp_page']
-    pdp_page.refresh()
     assert True
 
 #

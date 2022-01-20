@@ -1,3 +1,5 @@
+import time
+
 import utils.excel_data_utils as locators
 from utils.read_config import ReadConfig
 from utils.logger import Logger
@@ -24,6 +26,26 @@ class PdpPage(BasePage):
         self.update_product()
 
     def update_product(self):
-        product_info_elements = self.find_all_elements("PDP_Page", "product_info", 3)
-        quantity = self.visible_clickable_new("PDP_Page", "quantity", 3)
-        self.product.map_from_pdp_element(product_info_elements, quantity)
+        try:
+            product_info_elements = self.find_all_elements("PDP_Page", "product_info", 3)
+            self.product.map_from_pdp_element(product_info_elements)
+            extra_info_elements = self.find_all_elements("PDP_Page", "additional info click", 3)
+            extra_info_elements[2].click()
+            time.sleep(1)
+            extra_info_elements[4].click()
+            time.sleep(1)
+            extra_info_content = self.find_all_elements("PDP_Page", "additional info content", 3)
+            self.product.description = extra_info_content[0].text
+            self.product.details_dimensions = extra_info_content[1].text
+            self.product.other_info = extra_info_content[2].text
+        except Exception:
+            Logger.log_warning("PDP Page: Could not update Product info. ")
+
+    def input_quantity(self, quantity):
+        self.input_text(
+            tab_name="PDP_Page",
+            key="quantity",
+            text=str(quantity),
+            field_length=1,
+            wait=max_wait_time//10
+        )
