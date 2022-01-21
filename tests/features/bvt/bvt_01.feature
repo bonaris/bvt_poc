@@ -2,9 +2,8 @@ Feature: Guest user should be able to add products to cart and checkout
 
   Scenario: Guest user should be able to add products to cart using PLP Page
     Given Z Gallerie website should be up and running
-
     When user provides Meganav to get to a PLP, for example "Tabletop > Serveware & Flatware"
-    Then PLP is displayed as per selection
+    Then PLP is displayed as per selection with expected header
     And Product Grid is displayed on the page
     And each product has a name, price and a "Quick Look" link
     And there are filters like: color, price range
@@ -30,8 +29,14 @@ Feature: Guest user should be able to add products to cart and checkout
 
     When user clicks button Add to Cart
     Then drop down cart frame is displayed
+    And price and total should be displayed and calculated as expected
 #    And selects attributes like size & fabric, where applicable
 #    And an overlay should be displayed confirming the qty of product(s) added to cart
-#    And price and total should be displayed and calculated as expected
+
+    When user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"
+    Then PLP is displayed as per selection with expected header
+    And Product Grid is displayed on the page
+    And each product has a name, price and a "Quick Look" link
+
 
 

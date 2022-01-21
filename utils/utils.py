@@ -124,3 +124,6 @@ class Utils():
         random_index = random.randint(0, total_elements - 1)
         return elements_list[random_index]
 
+    @staticmethod
+    def price_to_number(price):
+        return float(price.replace('$', ""))

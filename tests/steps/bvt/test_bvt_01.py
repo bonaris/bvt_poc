@@ -5,6 +5,7 @@ import utils.excel_data_utils as test_data
 from utils.logger import Logger
 from validators.plp_validator import PlpValidator
 from validators.pdp_validator import PdpValidator
+from validators.cart_validator import CartValidator
 from pages.plp import PlpPage
 from pages.top_user_menu import TopUserMenu
 from utils.utils import Utils
@@ -34,11 +35,12 @@ def open_url(context):
     time.sleep(default_wait_time//3)
 
 
-@then('PLP is displayed as per selection')
+@then('PLP is displayed as per selection with expected header')
 def validate_plp_header(context):
     context['plp_page'] = PlpPage(context['driver'])
+    expected_header = context["plp_page"].breadcrumbs_list[-1]
     Utils.save_screenshot(context['driver'], tc_name='plp_page', frame_name='header')
-    assert PlpValidator.validate_header(actual=context['plp_page'].get_header_text(), expected=test_data_record.get('Expected Header'))
+    assert PlpValidator.validate_header(actual=context['plp_page'].get_header_text(), expected=expected_header)
 
 
 @then('Product Grid is displayed on the page')
@@ -203,7 +205,20 @@ def add_to_cart(context):
 
 
 @then(u'drop down cart frame is displayed')
-def validate_cart_dropdown(context):
+def validate_drop_down_cart_displayed(context):
     cart_page = context['cart_page']
-    cart_page.refresh()
-    assert True
+    assert CartValidator.validate_drop_down_cart_displayed(cart_page)
+
+
+@then(u'price and total should be displayed and calculated as expected')
+def validate_drop_down_cart(context):
+    cart_page = context['cart_page']
+    CartValidator.validate_drop_down_cart(cart_page)
+
+
+@when('user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"')
+def open_url(context):
+    full_url = store_url + test_data_record.get('Meganav2')
+    Logger.log_info(f"Navigating to {full_url} ***")
+    context['driver'].get(full_url)
+    time.sleep(default_wait_time//3)

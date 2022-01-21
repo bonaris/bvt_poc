@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from utils.read_config import ReadConfig
+from selenium.common.exceptions import TimeoutException
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
@@ -118,3 +119,13 @@ class BasePage:
             except Exception:
                 Logger.log_warning(f"Frame {key} is not found. Check tab {tab_name} in locator file {locators_file}")
 
+    def is_element_present(self, tab_name, key, wait=max_wait_time):
+        element_info_list = locators.find_all_records(locators_file, tab_name, key)
+        element = None
+        for element_info in element_info_list:
+            pass
+        try:
+            element = self.visible(condition=(element_info.get("By"), element_info.get("locator")), wait=wait)
+        except TimeoutException:
+            Logger.log_error(f'Element {key} from tab {tab_name} is not present.')
+        return element
