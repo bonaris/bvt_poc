@@ -16,6 +16,7 @@ class BasePage:
     breadcrumbs_list = []
     breadcrumbs_list_elements = {}
 
+
     def switch_v2_co_iframe(self, by='xpath', locator="//*[@id='checkoutV2']", wait=max_wait_time):
         try:
             WebDriverWait(self.driver, wait).until(EC.frame_to_be_available_and_switch_to_it((by, locator)))
@@ -116,3 +117,4 @@ class BasePage:
                 break
             except Exception:
                 Logger.log_warning(f"Frame {key} is not found. Check tab {tab_name} in locator file {locators_file}")
+

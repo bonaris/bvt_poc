@@ -1,23 +1,21 @@
-import utils.excel_data_utils as locators
 from utils.read_config import ReadConfig
-from utils.logger import Logger
-from validators.base_validator import BaseValidator
-from utils.utils import Utils
 from data_types.product import Product
 from pages.base_page import BasePage
-
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
 
 
 class Cart(BasePage):
-    product = None
+    displayed_products = []
+    added_products = []
+    products_elements = []
+    cart_total = 0.0
 
     def __init__(self, driver, product=Product()):
         self.driver = driver
-        self.product = product
-#        self.switch_to_frame("Cart_Page", "cart preview dropdown")
+        #        self.switch_to_frame("Cart_Page", "cart preview dropdown")
+        self.added_products.append(product)
         self.refresh()
 
     def update_quantity(self, quantity):
@@ -31,4 +29,14 @@ class Cart(BasePage):
         )
 
     def refresh(self):
-        return None
+        self.get_products_info()
+
+    def get_products_info(self):
+        self.products_elements = self.find_all_elements("Cart_Page", "drop down products")
+        self.cart_total = 0.0
+        for element in self.products_elements:
+            product = Product()
+            product.map_from_drop_down_cart(element)
+            product.element = element
+            self.cart_total += float(product.cart_total.replace('$', ''))
+            self.displayed_products.append(product)

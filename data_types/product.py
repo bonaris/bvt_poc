@@ -15,6 +15,7 @@ class Product:
     quick_look = None
     availability = None
     quantity = None
+    cart_total = None
 
     def to_string(self):
         data_dictionary = {
@@ -29,6 +30,8 @@ class Product:
             "details_dimensions": self.details_dimensions,
             "availability": self.availability,
             "quantity": self.quantity,
+            "cart_total": self.cart_total,
+            "expected_total": self.get_expected_total(),
             "other_info": self.other_info
         }
         return str(data_dictionary)
@@ -52,3 +55,16 @@ class Product:
             elif "SKU":
                 self.sku = element.text.split('\n')[1]
         self.quantity = quantity
+
+    def map_from_drop_down_cart(self, element):
+        values = element.text.split('\n')
+        self.name = values[0]
+        self.cart_total = values[3]
+
+    def get_expected_total(self):
+        price = float(self.original_price.replace('$', ""))
+        if self.quantity is None:
+            self.quantity = 0
+        if self.sale_price is not None and float(self.sale_price.replace('$', "")) > 0.0:
+            price = float(self.sale_price.replace('$', ""))
+        return int(self.quantity) * price

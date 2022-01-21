@@ -61,14 +61,17 @@ class PlpPage(BasePage):
         return self.product_grid_elements
 
     def get_filters(self):
-        self.filter_label = self.visible_clickable_new("PLP_Page", "filterLabel", 5)
-        total_elements = self.find_all_elements("PLP_Page", "filters", 5)
-        self.filter_list = []
-        self.filter_list_elements = []
-        for el in total_elements:
-            if len(el.text) > 0:
-                self.filter_list.append(el.text)
-                self.filter_list_elements.append(el)
+        try:
+            self.filter_label = self.visible_clickable_new("PLP_Page", "filterLabel", 5)
+            total_elements = self.find_all_elements("PLP_Page", "filters", 5)
+            self.filter_list = []
+            self.filter_list_elements = []
+            for el in total_elements:
+                if len(el.text) > 0:
+                    self.filter_list.append(el.text)
+                    self.filter_list_elements.append(el)
+        except Exception:
+            Logger.log_error("Could not find any filters on PLP Page")
 
     def select_color_filter(self, color):
         try:

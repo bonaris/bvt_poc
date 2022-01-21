@@ -6,7 +6,7 @@ from utils.logger import Logger
 from validators.plp_validator import PlpValidator
 from validators.pdp_validator import PdpValidator
 from pages.plp import PlpPage
-from pages.pdp import PdpPage
+from pages.top_user_menu import TopUserMenu
 from utils.utils import Utils
 
 
@@ -194,14 +194,16 @@ def add_to_cart(context):
     cart_page.input_text(
         tab_name='Cart_Page',
         key='quantity input',
-        text=2,
+        text='2',
         field_length=3,
         wait=3
     )
     context['cart_page'] = cart_page
+#    TopUserMenu(context['driver']).click_on_cart()
 
 
 @then(u'drop down cart frame is displayed')
 def validate_cart_dropdown(context):
     cart_page = context['cart_page']
+    cart_page.refresh()
     assert True

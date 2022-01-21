@@ -1,10 +1,6 @@
 import time
-
-import utils.excel_data_utils as locators
 from utils.read_config import ReadConfig
 from utils.logger import Logger
-from validators.base_validator import BaseValidator
-from utils.utils import Utils
 from data_types.product import Product
 from pages.base_page import BasePage
 from pages.cart import Cart
@@ -57,5 +53,6 @@ class PdpPage(BasePage):
     def add_to_cart(self):
         self.click_page_up()
         self.click_on_element("PDP_Page", "add to cart button")
+        time.sleep(max_wait_time//5)
         cart = Cart(driver=self.driver, product=self.product)
         return cart
