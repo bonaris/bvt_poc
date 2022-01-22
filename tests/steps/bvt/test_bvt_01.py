@@ -45,49 +45,44 @@ def validate_plp_header(context):
 
 @then('Product Grid is displayed on the page')
 def validate_plp_grid(context):
-    plp_page = context['plp_page']
-    context['original_pl'] = plp_page.product_list
     Utils.save_screenshot(context['driver'], tc_name='plp_page', frame_name='product_grid')
-    assert PlpValidator.validate_values(len(plp_page.product_grid_elements), int(plp_page.initial_products_in_grid), "Total products in grid on start")
+    assert PlpValidator.validate_values(
+        len(context['plp_page'].product_grid_elements),
+        int(context['plp_page'].initial_products_in_grid),
+        "Total products in grid on start")
 
 
 @then(u'each product has a name, price and a "Quick Look" link')
 def validate_products(context):
-    plp_page = context['plp_page']
-    assert PlpValidator.validate_products(plp_page.product_list)
+    assert PlpValidator.validate_products(context['plp_page'].product_list)
 
 
 @then(u'there are filters like: color, price range')
 def validate_filters(context):
-    plp_page = context['plp_page']
-    assert PlpValidator.validate_filters(plp_page.filter_label.text, plp_page.filter_list)
+    assert PlpValidator.validate_filters(context['plp_page'].filter_label.text, context['plp_page'].filter_list)
 
 
 @then(u'there is a dropdown for color filter to select best match')
 def filter_drop_down(context):
-    plp_page = context['plp_page']
-    assert PlpValidator.validate_values((plp_page.filter_list_elements[0] is not None), True, "Color Filter is available")
+    assert PlpValidator.validate_values((context['plp_page'].filter_list_elements[0] is not None), True, "Color Filter is available")
 
 
 @when(u'user selects one of the colors in a filter')
 def select_color(context):
-    plp_page = context['plp_page']
-    plp_page.select_color_filter(test_data_record.get("Color Filter"))
+    context['plp_page'].select_color_filter(test_data_record.get("Color Filter"))
     time.sleep(default_wait_time//6)
 
 
 @when(u'user selects one of the price-range in a filter')
 def select_price(context):
-    plp_page = context['plp_page']
-    plp_page.select_price_filter(test_data_record.get("Price Filter"))
+    context['plp_page'].select_price_filter(test_data_record.get("Price Filter"))
     time.sleep(default_wait_time//6)
 
 
 @then(u'Product List is updated based on the best match')
 def validate_filter(context):
-    plp_page = context['plp_page']
     assert PlpValidator.validate_values(
-        len(plp_page.update_product_list()),
+        len(context['plp_page'].update_product_list()),
         test_data_record.get("Filtered Products"),
         "Filtered Products"
     )
@@ -95,33 +90,29 @@ def validate_filter(context):
 
 @then(u'breadcrumbs filter links are available on the page')
 def validate_filter(context):
-    plp_page = context['plp_page']
-    plp_page.get_breadcrumbs_links()
-    assert PlpValidator.validate_breadcrumbs(plp_page.breadcrumbs_list, test_data_record.get('Expected Breadcrumb Path'))
+    context['plp_page'].get_breadcrumbs_links()
+    assert PlpValidator.validate_breadcrumbs(context['plp_page'].breadcrumbs_list, test_data_record.get('Expected Breadcrumb Path'))
 
 
 @when(u'user clicks on price range link')
 def select_price_range_breadcrumb(context):
-    plp_page = context['plp_page']
-    plp_page.click_breadcrumb(test_data_record.get('Price Displayed'))
+    context['plp_page'].click_breadcrumb(test_data_record.get('Price Displayed'))
     time.sleep(default_wait_time//6)
 
 
 @then(u'price range filter is cleared')
 def validate_filter(context):
-    plp_page = context['plp_page']
-    plp_page.get_breadcrumbs_links()
+    context['plp_page'].get_breadcrumbs_links()
     breadcrumb_to_remove = test_data_record.get('Price Displayed') + '/'
     expected_breadcrumbs = test_data_record.get('Expected Breadcrumb Path').replace(breadcrumb_to_remove, '')
-    assert PlpValidator.validate_breadcrumbs(plp_page.breadcrumbs_list, expected_breadcrumbs)
+    assert PlpValidator.validate_breadcrumbs(context['plp_page'].breadcrumbs_list, expected_breadcrumbs)
 
 
 @then(u'Product List is updated')
 def validate_filter(context):
-    plp_page = context['plp_page']
-    current_products_in_list = len(plp_page.product_list)
-    plp_page.update_product_list()
-    refreshed_products_in_list = len(plp_page.product_list)
+    current_products_in_list = len(context['plp_page'].product_list)
+    context['plp_page'].update_product_list()
+    refreshed_products_in_list = len(context['plp_page'].product_list)
     assert PlpValidator.validate_is_not_equal(
         current_products_in_list,
         refreshed_products_in_list,
@@ -131,82 +122,70 @@ def validate_filter(context):
 
 @when(u'user clicks on Clear All link')
 def clear_all_filters(context):
-    plp_page = context['plp_page']
-    plp_page.click_breadcrumb(test_data_record.get('Clear All Filters'))
+    context['plp_page'].click_breadcrumb(test_data_record.get('Clear All Filters'))
     time.sleep(default_wait_time//6)
 
 
 @then(u'all filters are cleared')
 def validate_filter(context):
-    plp_page = context['plp_page']
-    plp_page.get_breadcrumbs_links()
+    context['plp_page'].get_breadcrumbs_links()
     breadcrumb_to_remove = f"/{test_data_record.get('Color Displayed')}/"
     breadcrumb_to_remove += f"{test_data_record.get('Price Displayed')}/"
     breadcrumb_to_remove += f"{test_data_record.get('Clear All Filters')}"
     expected_breadcrumbs = test_data_record.get('Expected Breadcrumb Path').replace(breadcrumb_to_remove, '')
-    assert PlpValidator.validate_breadcrumbs(plp_page.breadcrumbs_list, expected_breadcrumbs)
+    assert PlpValidator.validate_breadcrumbs(context['plp_page'].breadcrumbs_list, expected_breadcrumbs)
 
 
 @then(u'Product List is the same as originally displayed')
 def validate_original_pl(context):
-    plp_page = context['plp_page']
-    plp_page.update_product_list()
-    assert PlpValidator.validate_products(plp_page.product_list)
+    context['plp_page'].update_product_list()
+    assert PlpValidator.validate_products(context['plp_page'].product_list)
 
 
 @when(u'user scrolls down a page or two and selects a product by clicking on it')
 def scroll_select(context):
-    plp_page = context['plp_page']
-    plp_page.click_page_down(pages=3)
+    context['plp_page'].click_page_down(pages=3)
     time.sleep(2)
-    plp_page.update_product_list()
     time.sleep(default_wait_time/5)
-    pdp_page = plp_page.find_and_click_on_available_product()
-    Logger.log_info(f'Product selected: {pdp_page.product.to_string()}')
-    context["selected_products"] = {"first": pdp_page.product}
-    context['pdp_page'] = pdp_page
+    context['pdp_page'] = context['plp_page'].find_and_click_on_available_product()
+    Logger.log_info(f'Product selected: {context["pdp_page"].product.to_string()}')
+    context["selected_products"] = {"first": context['pdp_page'].product}
 
 
 @then(u'PDP page is displayed for selected product')
 def validate_pdp_page(context):
-    pdp_page = context['pdp_page']
-    expected_breadcrumbs = f"{test_data_record.get('Expected Meganav Breadcrumb')}/{pdp_page.product.name}"
-    pdp_page.get_breadcrumbs_links()
-    assert PdpValidator.validate_breadcrumbs(actual_list=pdp_page.breadcrumbs_list, expected=expected_breadcrumbs)
+    expected_breadcrumbs = f"{test_data_record.get('Expected Meganav Breadcrumb')}/{context['pdp_page'].product.name}"
+    context['pdp_page'].get_breadcrumbs_links()
+    assert PdpValidator.validate_breadcrumbs(actual_list=context['pdp_page'].breadcrumbs_list, expected=expected_breadcrumbs)
 
 
 @then(u'And it is the same product as selected from PLP')
 def validate_correct_product_selected(context):
-    pdp_page = context['pdp_page']
     expected_product = context["selected_products"].get("first")
-    assert PdpValidator.validate_product_original_values(pdp_product=pdp_page.product, plp_product=expected_product)
+    assert PdpValidator.validate_product_original_values(pdp_product=context['pdp_page'].product, plp_product=expected_product)
 
 
 @then(u'SKU of selected product is displayed')
 def validate_correct_product_selected(context):
-    pdp_page = context['pdp_page']
-    assert PdpValidator.validate_not_empty(value=pdp_page.product.sku, field_name="SKU is not empty")
+    assert PdpValidator.validate_not_empty(value=context['pdp_page'].product.sku, field_name="SKU is not empty")
 
 
 @when(u'user clicks button Add to Cart')
 def add_to_cart(context):
-    pdp_page = context['pdp_page']
-    cart_page = pdp_page.add_to_cart()
-    Logger.log_info(f"Product {pdp_page.product.to_string()} added to the cart")
-    cart_page.input_text(
+    context['cart_page'] = context['pdp_page'].add_to_cart()
+    Logger.log_info(f"Product {context['pdp_page'].product.to_string()} added to the cart")
+    context['cart_page'].input_text(
         tab_name='Cart_Page',
         key='quantity input',
         text='2',
         field_length=3,
         wait=3
     )
-    context['cart_page'] = cart_page
 
 
 @then(u'drop down cart frame is displayed')
 def validate_drop_down_cart_displayed(context):
-    cart_page = context['cart_page']
-    assert CartValidator.validate_drop_down_cart_displayed(cart_page)
+    assert CartValidator.validate_drop_down_cart_displayed(context['cart_page'])
 
 
 @then(u'price and total should be displayed and calculated as expected')
@@ -225,12 +204,9 @@ def open_url(context):
 
 @when(u'user selects a product and clicks on Quick Look')
 def click_quick_look(context):
-    plp_page = context['plp_page']
-#    plp_page.update_product_list()
-    selected_product = Utils.get_random_list_element(plp_page.product_list)
+    selected_product = Utils.get_random_list_element(context['plp_page'].product_list)
     Logger.log_info(f"Quick Look for product {selected_product.to_string()}.")
-    quick_look_modal = plp_page.click_on_quick_look(product=selected_product)
-    context['quick_look'] = quick_look_modal
+    context['quick_look'] = context['plp_page'].click_on_quick_look(product=selected_product)
 
 
 @then(u'Quick Look modal window is displayed')

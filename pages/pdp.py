@@ -14,16 +14,16 @@ class PdpPage(BasePage):
     product = None
     add_to_cart_button = None
     description_button = None
-    find_to_store_button = None
+    find_in_store_button = None
     item_selection_button = None
 
     def __init__(self, driver, product=Product()):
         self.driver = driver
         self.product = product
-        self.add_to_cart_button = self.visible_clickable_new("PDP_Page", "add to cart button", 2)
-        self.description_button = self.visible_clickable_new("PDP_Page", "description button", 2)
-        self.find_to_store_button = self.visible_clickable_new("PDP_Page", "find in store button", 2)
-        self.item_selection_button = self.visible_clickable_new("PDP_Page", "item selection button", 2)
+        self.add_to_cart_button = self.visible_clickable_new("PDP_Page", "add to cart button", 1)
+        self.description_button = self.visible_clickable_new("PDP_Page", "description button", 1)
+        self.find_in_store_button = self.visible_clickable_new("PDP_Page", "find in store button", 1)
+        self.item_selection_button = self.visible_clickable_new("PDP_Page", "item selection button", 1)
         self.refresh()
 
     def refresh(self):
@@ -31,19 +31,22 @@ class PdpPage(BasePage):
 
     def update_product(self):
         try:
-            product_info_elements = self.find_all_elements("PDP_Page", "product_info", 3)
-            self.product.map_from_pdp_element(product_info_elements)
-            extra_info_elements = self.find_all_elements("PDP_Page", "additional info click", 3)
-            extra_info_elements[2].click()
-            time.sleep(1)
-            extra_info_elements[4].click()
-            time.sleep(1)
-            extra_info_content = self.find_all_elements("PDP_Page", "additional info content", 3)
-            self.product.description = extra_info_content[0].text
-            self.product.details_dimensions = extra_info_content[1].text
-            self.product.other_info = extra_info_content[2].text
-            self.product.original_price = self.visible_clickable_new("PDP_Page", "original price", 3).text
-            self.product.sale_price = self.visible_clickable_new("PDP_Page", "sale price", 3).text
+            product_info_elements = self.find_all_elements("PDP_Page", "product_info", 1)
+            if product_info_elements is not None:
+                self.product.map_from_pdp_element(product_info_elements)
+                extra_info_elements = self.find_all_elements("PDP_Page", "additional info click", 1)
+                extra_info_elements[2].click()
+                time.sleep(1)
+                extra_info_elements[4].click()
+                time.sleep(1)
+                extra_info_content = self.find_all_elements("PDP_Page", "additional info content", 1)
+                self.product.description = extra_info_content[0].text
+                self.product.details_dimensions = extra_info_content[1].text
+                self.product.other_info = extra_info_content[2].text
+            else:
+                self.product.sku = self.visible_clickable_new("PDP_Page", "sku", 1).text
+            self.product.original_price = self.visible_clickable_new("PDP_Page", "original price", 1).text
+            self.product.sale_price = self.visible_clickable_new("PDP_Page", "sale price", 1).text
             # ToDo: Add star rating and reviews here star rating class already in
             #  locators in PDP_Page tab, key = 'star rating'
         except Exception:

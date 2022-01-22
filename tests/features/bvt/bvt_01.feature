@@ -44,5 +44,5 @@ Feature: Guest user should be able to add products to cart and checkout
     And each product has a name, price and a "Quick Look" link
 
     When user selects a product and clicks on Quick Look
-    Then Quick Look modal is displayed
+    Then Quick Look modal window is displayed
 #    And and it contains selected product information

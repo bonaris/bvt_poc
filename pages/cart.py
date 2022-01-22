@@ -32,7 +32,7 @@ class Cart(BasePage):
         self.get_products_info()
 
     def get_products_info(self):
-        self.products_elements = self.find_all_elements("Cart_Page", "drop down products")
+        self.products_elements = self.find_all_elements("Cart_Page", "drop down products", 3)
         self.cart_total = 0.0
         for element in self.products_elements:
             product = Product()
