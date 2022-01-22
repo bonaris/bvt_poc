@@ -38,5 +38,11 @@ Feature: Guest user should be able to add products to cart and checkout
     And Product Grid is displayed on the page
     And each product has a name, price and a "Quick Look" link
 
+    When user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"
+    Then PLP is displayed as per selection with expected header
+    And Product Grid is displayed on the page
+    And each product has a name, price and a "Quick Look" link
 
-
+    When user selects a product and clicks on Quick Look
+    Then Quick Look modal is displayed
+#    And and it contains selected product information

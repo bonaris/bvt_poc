@@ -48,14 +48,18 @@ class PlpPage(BasePage):
             wait=max_wait_time
         )
 
-    def get_product_grid(self):
+    def update_product_list(self):
         self.product_list = []
         try:
+            quick_view_elements = self.get_quick_look_elements()
             self.product_grid_elements = self.find_all_elements("PLP_Page", "productList", 5)
+            i = 0
             for product_element in self.product_grid_elements:
                 product = Product()
                 product.map_from_plp_element(product_element)
+                product.quick_look_element = quick_view_elements[i]
                 self.product_list.append(product)
+                i += 1
         except Exception:
             Logger.log_warning("PLP Page: could not read header")
         return self.product_grid_elements
@@ -91,7 +95,7 @@ class PlpPage(BasePage):
 
     def refresh(self):
         self.get_header_text()
-        self.get_product_grid()
+        self.update_product_list()
         self.get_filters()
         self.get_breadcrumbs_links()
 
@@ -126,5 +130,15 @@ class PlpPage(BasePage):
                 pdp_page = None
         return pdp_page
 
+    def get_quick_look_elements(self):
+        quick_look_elements = []
+        all_elements = self.find_all_elements("PLP_Page", "quick look elements")
+        for element in all_elements:
+            if element.text == 'Quick Look':
+                quick_look_elements.append(element)
+        return quick_look_elements
 
-
+    def click_on_quick_look(self, product):
+        self.click_on_element(element=product.quick_look_element)
+        ql_modal = PdpPage(driver=self.driver, product=product)
+        return ql_modal

@@ -19,6 +19,7 @@ class Product:
     availability = None
     quantity = None
     cart_total = None
+    quick_look_element = None
 
     def to_string(self):
         data_dictionary = {
@@ -48,6 +49,10 @@ class Product:
             self.original_price = values[2]
             self.sale_price = values[3]
             self.quick_look = values[4]
+        elif len(values) == 3:
+            self.name = values[0]
+            self.original_price = values[1]
+            self.quick_look = values[2]
 
     def map_from_pdp_element(self, element_list, quantity=1):
         for element in element_list:

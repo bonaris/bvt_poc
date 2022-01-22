@@ -32,7 +32,7 @@ def open_url(context):
     full_url = store_url + test_data_record.get('Meganav1')
     Logger.log_info(f"Navigating to {full_url} ***")
     context['driver'].get(full_url)
-    time.sleep(default_wait_time//3)
+    time.sleep(default_wait_time//5)
 
 
 @then('PLP is displayed as per selection with expected header')
@@ -87,7 +87,7 @@ def select_price(context):
 def validate_filter(context):
     plp_page = context['plp_page']
     assert PlpValidator.validate_values(
-        len(plp_page.get_product_grid()),
+        len(plp_page.update_product_list()),
         test_data_record.get("Filtered Products"),
         "Filtered Products"
     )
@@ -120,7 +120,7 @@ def validate_filter(context):
 def validate_filter(context):
     plp_page = context['plp_page']
     current_products_in_list = len(plp_page.product_list)
-    plp_page.get_product_grid()
+    plp_page.update_product_list()
     refreshed_products_in_list = len(plp_page.product_list)
     assert PlpValidator.validate_is_not_equal(
         current_products_in_list,
@@ -150,7 +150,7 @@ def validate_filter(context):
 @then(u'Product List is the same as originally displayed')
 def validate_original_pl(context):
     plp_page = context['plp_page']
-    plp_page.get_product_grid()
+    plp_page.update_product_list()
     assert PlpValidator.validate_products(plp_page.product_list)
 
 
@@ -159,7 +159,7 @@ def scroll_select(context):
     plp_page = context['plp_page']
     plp_page.click_page_down(pages=3)
     time.sleep(2)
-    plp_page.get_product_grid()
+    plp_page.update_product_list()
     time.sleep(default_wait_time/5)
     pdp_page = plp_page.find_and_click_on_available_product()
     Logger.log_info(f'Product selected: {pdp_page.product.to_string()}')
@@ -201,7 +201,6 @@ def add_to_cart(context):
         wait=3
     )
     context['cart_page'] = cart_page
-#    TopUserMenu(context['driver']).click_on_cart()
 
 
 @then(u'drop down cart frame is displayed')
@@ -221,4 +220,20 @@ def open_url(context):
     full_url = store_url + test_data_record.get('Meganav2')
     Logger.log_info(f"Navigating to {full_url} ***")
     context['driver'].get(full_url)
-    time.sleep(default_wait_time//3)
+    time.sleep(default_wait_time//6)
+
+
+@when(u'user selects a product and clicks on Quick Look')
+def click_quick_look(context):
+    plp_page = context['plp_page']
+#    plp_page.update_product_list()
+    selected_product = Utils.get_random_list_element(plp_page.product_list)
+    Logger.log_info(f"Quick Look for product {selected_product.to_string()}.")
+    quick_look_modal = plp_page.click_on_quick_look(product=selected_product)
+    context['quick_look'] = quick_look_modal
+
+
+@then(u'Quick Look modal window is displayed')
+def quick_look_opened(context):
+    quick_look_modal = context['quick_look']
+    assert True

@@ -12,10 +12,18 @@ max_wait_time = ReadConfig.get_max_wait_time()
 class PdpPage(BasePage):
 
     product = None
+    add_to_cart_button = None
+    description_button = None
+    find_to_store_button = None
+    item_selection_button = None
 
     def __init__(self, driver, product=Product()):
         self.driver = driver
         self.product = product
+        self.add_to_cart_button = self.visible_clickable_new("PDP_Page", "add to cart button", 2)
+        self.description_button = self.visible_clickable_new("PDP_Page", "description button", 2)
+        self.find_to_store_button = self.visible_clickable_new("PDP_Page", "find in store button", 2)
+        self.item_selection_button = self.visible_clickable_new("PDP_Page", "item selection button", 2)
         self.refresh()
 
     def refresh(self):
@@ -46,13 +54,13 @@ class PdpPage(BasePage):
             tab_name="PDP_Page",
             key="quantity",
             text=str(quantity),
-            field_length=1,
+            field_length=2,
             wait=max_wait_time//10
         )
 
     def add_to_cart(self):
         self.click_page_up()
-        self.click_on_element("PDP_Page", "add to cart button")
+        self.click_on_element(self.add_to_cart_button)
         time.sleep(max_wait_time//5)
         cart = Cart(driver=self.driver, product=self.product)
         return cart

@@ -1,0 +1,3 @@
+class StoreLocation:
+
+    element = None

@@ -4,12 +4,12 @@ import tempfile
 import os
 import sys
 import logging
-import boto3
 from pathlib import Path
 import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+
 
 
 class Utils():
@@ -127,3 +127,5 @@ class Utils():
     @staticmethod
     def price_to_number(price):
         return float(price.replace('$', ""))
+
+

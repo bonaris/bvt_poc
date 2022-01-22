@@ -41,7 +41,7 @@ class BaseValidator:
         expected = f'{field_name}: {value}'
         actual = f'{field_name}: {value}'
         Logger.log_info(f'Field value: {value}')
-        if len(value) <= 0 or value is None:
+        if value is None:
             actual = f'{field_name} is empty'
         result = BaseValidator.validate_values(actual=actual, expected=expected, field_name=field_name)
         return result

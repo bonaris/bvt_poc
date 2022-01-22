@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from utils.read_config import ReadConfig
 from selenium.common.exceptions import TimeoutException
+from utils.utils import Utils
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
@@ -46,7 +47,20 @@ class BasePage:
             element = self.visible_clickable_new(tab_name=tab_name, key=key, wait=wait)
             element.click()
         except Exception:
-            Logger.log_warning(f'Could not click on {key} from {tab_name}')
+            try:
+                element = self.visible_clickable_new(tab_name=tab_name, key=key, wait=wait)
+                self.driver.execute_script("arguments[0].click();", element)
+            except Exception:
+                Logger.log_warning(f'Could not click on {key} from {tab_name}')
+
+    def click_on_element(self, element):
+        try:
+            element.click()
+        except Exception:
+            try:
+                self.driver.execute_script("arguments[0].click();", element)
+            except Exception:
+                Logger.log_warning(f'Could not click on {element}, with text {element.text}')
 
     def visible_clickable_new(self, tab_name, key, wait=max_wait_time):
         element_info_list = locators.find_all_records(locators_file, tab_name, key)
@@ -129,3 +143,7 @@ class BasePage:
         except TimeoutException:
             Logger.log_error(f'Element {key} from tab {tab_name} is not present.')
         return element
+
+    @staticmethod
+    def get_random_valid_zip_code():
+        return Utils.get_random_list_element(ReadConfig.get_value_by_keys("Constants", 'ZIP CODES'))
