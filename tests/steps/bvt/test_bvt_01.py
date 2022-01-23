@@ -196,7 +196,7 @@ def validate_drop_down_cart(context):
 
 @when('user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"')
 def open_url(context):
-    full_url = store_url + test_data_record.get('Meganav2')
+    full_url = store_url + test_data_record.get('Meganav1')
     Logger.log_info(f"Navigating to {full_url} ***")
     context['driver'].get(full_url)
     time.sleep(default_wait_time//6)

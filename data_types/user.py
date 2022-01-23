@@ -1,52 +1,46 @@
+from utils.read_config import ReadConfig
+import utils.excel_data_utils as test_data
+
+
+test_data_filename = ReadConfig.get_test_data_filename()
+
+
 class User:
-    def __init__(self, find_by_list=None, values=None):
-        self.first_name = None
-        self.last_name = None
-        self.email = None
-        self.password = None
-        self.rep_password = None
-        self.phone = None
 
-        self.first_name_find_by = None
-        self.last_name_find_by = None
-        self.email_find_by = None
-        self.password_find_by = None
-        self.rep_password_find_by = None
-        self.phone_find_by = None
+    first_name = None
+    last_name = None
+    email = None
+    password = None
+    rep_password = None
+    phone = None
+    user_record = None
 
-        self.mapped_keys_find_by = None
-        self.mapped_keys = None
+    first_name_element = None
+    last_name_element = None
+    email_element = None
+    password_element = None
+    rep_password_element = None
+    phone_element = None
+    user_record_element = None
 
-        self.find_by_list = find_by_list
-        self.values = values
-        self.map_keys()
-        self.map_form_data()
+    def __init__(self, user_key, tab_name='Users'):
+        self.user_record = test_data.find_test_data(test_data_filename, tab_name, user_key)
+        self.first_name = self.user_record.get('first name')
+        self.last_name = self.user_record.get('last name')
+        self.email = self.user_record.get('email')
+        self.password = self.user_record.get('password')
+        self.rep_password = self.user_record.get('re password')
+        self.phone = self.user_record.get('phone')
 
-    def map_keys(self):
-        if self.values:
-            # if self.values.get("first"):
-            #     self.first_name = self.values.get("first")
-            #
-            # if self.values.get("last"):
-            #     self.last_name = self.values.get("last")
-            self.email = self.values.get("email")
-            self.password = self.values.get("pwd")
+    def to_string(self):
+        data_dictionary = {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "password": self.password,
+            "rep_password": self.rep_password,
+            "phone": self.phone
+        }
+        return str(data_dictionary)
 
-        if self.find_by_list:
-            self.email_find_by = self.find_by_list.get("email")
-            self.password_find_by = self.find_by_list.get("pwd")
-#            self.first_name_find_by = self.find_by_list.get("first")
 
-    def map_form_data(self):
-        if self.values and self.find_by_list:
-            self.mapped_keys = [
-                (self.email_find_by, self.email),
-                (self.password_find_by, self.password)
-            ]
-
-    def get_user_login_form_data(self, username_find_by, password_find_by):
-        keys_and_values = [
-            (username_find_by, self.email),
-            (password_find_by, self.password)
-        ]
-        return keys_and_values
