@@ -139,6 +139,6 @@ class PlpPage(BasePage):
         return quick_look_elements
 
     def click_on_quick_look(self, product):
-        self.click_on_element(element=product.quick_look_element)
+        self.click_on_element_obj(element=product.quick_look_element)
         ql_modal = PdpPage(driver=self.driver, product=product)
         return ql_modal

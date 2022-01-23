@@ -9,6 +9,7 @@ from validators.cart_validator import CartValidator
 from pages.plp import PlpPage
 from pages.top_user_menu import TopUserMenu
 from utils.utils import Utils
+from pages.sign_in_page import SignInPage
 
 
 scenarios('../../features/bvt/bvt_01.feature', features_base_dir='tests/features/bvt')
@@ -24,7 +25,12 @@ def open_home_page(driver, context):
     Logger.log_info(f"Navigating to {store_url} ***")
     driver.get(store_url)
     context['driver'] = driver
+    TopUserMenu(driver).click_on_sign_in()
     time.sleep(default_wait_time//6)
+    sign_in_page = SignInPage(driver)
+    user = test_data.find_test_data(test_data_filename, 'Users', 'e2e-10')
+    sign_in_page.login(user_record=user)
+    time.sleep(1)
 
 
 @when('user provides Meganav to get to a PLP, for example "Tabletop > Serveware & Flatware"')

@@ -1,4 +1,5 @@
 import random
+import string
 import time
 import tempfile
 import os
@@ -9,7 +10,6 @@ import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-
 
 
 class Utils():
@@ -128,4 +128,10 @@ class Utils():
     def price_to_number(price):
         return float(price.replace('$', ""))
 
+    @staticmethod
+    def get_random_string(length):
+        return ''.join(random.choice(string.ascii_letters) for i in range(length))
 
+    @staticmethod
+    def get_random_numeric_string(length):
+        return ''.join(random.choice('1234567890') for i in range(length))

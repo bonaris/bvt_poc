@@ -53,7 +53,7 @@ class BasePage:
             except Exception:
                 Logger.log_warning(f'Could not click on {key} from {tab_name}')
 
-    def click_on_element(self, element):
+    def click_on_element_obj(self, element):
         try:
             element.click()
         except Exception:
