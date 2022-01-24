@@ -8,6 +8,7 @@ from utils.read_config import ReadConfig
 from selenium.common.exceptions import TimeoutException
 from utils.utils import Utils
 
+
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
 
@@ -17,7 +18,6 @@ class BasePage:
     driver = None
     breadcrumbs_list = []
     breadcrumbs_list_elements = {}
-
 
     def switch_v2_co_iframe(self, by='xpath', locator="//*[@id='checkoutV2']", wait=max_wait_time):
         try:
@@ -109,6 +109,15 @@ class BasePage:
             Logger.log_warning(
                 f'Could not find element {key} in tab {tab_name}. Update {key} data in {tab_name} table')
 
+    def input_text_element(self, element, text, field_length=1):
+        try:
+            for i in range(field_length):
+                element.send_keys(Keys.BACKSPACE)
+            element.send_keys(text)
+        except Exception:
+            Logger.log_warning(
+                f'Could not find element {element}.')
+
     def get_breadcrumbs_links(self):
         elements = self.find_all_elements("Page", "breadcrumb")
         self.breadcrumbs_list = []
@@ -144,6 +153,29 @@ class BasePage:
             Logger.log_error(f'Element {key} from tab {tab_name} is not present.')
         return element
 
+    def fill_form(self, elements_list, values_list):
+        if len(elements_list) == len(values_list):
+            for i in range(len(elements_list) - 1):
+                try:
+                    length = len(elements_list[i].text)
+                    if length == 0:
+                        length = len(elements_list[i].get_attribute('value'))
+                except Exception:
+                        length = 30
+
+                try:
+                    if values_list[i] is not None:
+                        Logger.log_info(f'Updating element {str(elements_list[i])} with value {values_list[i]}')
+                        self.input_text_element(
+                            element=elements_list[i],
+                            text=str(values_list[i]),
+                            field_length=length
+                        )
+                        time.sleep(1)
+                except Exception:
+                    Logger.log_warning(f"Was not able to input value {values_list[i]}")
+
     @staticmethod
     def get_random_valid_zip_code():
         return Utils.get_random_list_element(ReadConfig.get_value_by_keys("Constants", 'ZIP CODES'))
+

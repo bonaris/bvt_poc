@@ -4,6 +4,7 @@ from utils.logger import Logger
 from pages.base_page import BasePage
 from data_types.user import User
 
+
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
 
@@ -29,6 +30,7 @@ class SignInPage(BasePage):
         self.input_text('Sign In', 'email', self.user.email, 0, 2)
         self.input_text('Sign In', 'password', self.user.password, 0, 2)
         self.click_on_element('Sign In', 'sign in button', 2)
+        time.sleep(max_wait_time//4)
 
     def new_user(self, user_record):
         pass
