@@ -4,7 +4,7 @@ from data_types.product import Product
 from pages.base_page import BasePage
 from pages.sign_in_page import SignInPage
 from pages.top_user_menu import TopUserMenu
-from pages.accoun_page import AccountPage
+from pages.account_page import AccountPage
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()

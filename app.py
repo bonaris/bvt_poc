@@ -162,6 +162,8 @@ if __name__ == '__main__':
     parser.add_argument('--browser', help='chrome/firefox/edge')
     parser.add_argument('--mode', help='iphone6/iphone7/iphone8/iphonex/pixel')
     parser.add_argument('--tc', help='specific test case file name')
+    parser.add_argument('--type', help='specific test type bvt/e2e')
+
     args = parser.parse_args()
 
     TestExecutor.run_tests(testcase_class=args.tc, browser=args.browser, mode=args.mode)

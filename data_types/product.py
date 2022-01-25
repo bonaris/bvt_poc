@@ -57,11 +57,20 @@ class Product:
     def map_from_pdp_element(self, element_list, quantity=1):
         for element in element_list:
             if "Availability" in element.text:
-                self.availability = element.text.split('\n')[1]
+                try:
+                    self.availability = element.text.split('\n')[1]
+                except Exception:
+                    pass
             elif "Dimensions" in element.text:
-                self.dimensions = element.text.split('\n')[1]
+                try:
+                    self.dimensions = element.text.split('\n')[1]
+                except Exception:
+                    pass
             elif "SKU":
-                self.sku = element.text.split('\n')[1]
+                try:
+                    self.sku = element.text.split('\n')[1]
+                except Exception:
+                    pass
         self.quantity = quantity
 
     def map_from_drop_down_cart(self, element):

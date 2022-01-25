@@ -9,7 +9,7 @@ class TestExecutor(object):
     test_results = [['TestCase', 'Browser/Mode', 'StartTime', 'EndTime',
                      'UserType', 'Status', 'Order #', 'FailReasons', 'Screenshots', 'RunID']]
     @staticmethod
-    def run_tests(testcase_class=None, browser='chrome', s3_bucket=None,
+    def run_tests(testcase_class=None, browser='chrome', s3_bucket=None, test_type='bvt',
                   s3_prefix=None, run_id=None, mode=None):
 
         loader = unittest.TestLoader()

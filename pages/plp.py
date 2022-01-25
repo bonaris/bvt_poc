@@ -112,15 +112,15 @@ class PlpPage(BasePage):
 
     def click_on_random_product(self):
         product_selected = Utils.get_random_list_element(self.product_list)
-        product_selected.element.click()
-        return product_selected
+        self.click_on_element_obj(product_selected.element)
+        return PdpPage(driver=self.driver, product=product_selected)
 
-    def find_and_click_on_available_product(self, gift_wrapping=False):
+    def find_and_click_on_available_product(self, attempts=3, gift_wrapping=False):
         pdp_page = None
-        self.click_page_down(2)
+        attempts_counter = 1
         for product in self.product_list:
             product.element.click()
-            time.sleep(max_wait_time//6)
+            time.sleep(max_wait_time//4)
             pdp_page = PdpPage(driver=self.driver, product=product)
             if "In Stock" in pdp_page.product.availability:
                 break
@@ -128,6 +128,11 @@ class PlpPage(BasePage):
                 break
             else:
                 pdp_page = None
+                self.driver.back()
+            if attempts_counter <= attempts:
+                attempts_counter += 1
+            else:
+                break
         return pdp_page
 
     def get_quick_look_elements(self):
