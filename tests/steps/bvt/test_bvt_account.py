@@ -1,7 +1,7 @@
 import time
+import utils.excel_data_utils as test_data
 from pytest_bdd import scenarios,  when, then, given
 from utils.read_config import ReadConfig
-import utils.excel_data_utils as test_data
 from utils.logger import Logger
 from pages.home_page import HomePage
 from validators.account_validator import AccountValidator

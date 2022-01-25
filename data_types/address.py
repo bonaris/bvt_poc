@@ -41,8 +41,29 @@ class Address:
     def map_form_data(self):
         pass
 
+    def map_account_shipping_address(self, address_string):
+        fields = address_string.split('\n')
+        self.first_name = fields[0].split(' ')[0]
+        self.last_name = fields[0].split(' ')[1]
+        if len(fields[0].split(' ')) > 2:
+            self.last_name = ' ' + fields[0].split(' ')[2]
+        self.line_one = fields[1]
+        self.city = fields[2].split(' ')[0]
+        self.state = fields[2].split(' ')[1]
+        self.zip = fields[2].split(' ')[2]
+        self.phone = fields[3]
+
     def get_form_values(self):
-        pass
+        return [
+            self.first_name,
+            self.last_name,
+            self.line_one,
+            self.line_two,
+            self.city,
+            self.state,
+            self.zip,
+            self.phone
+        ]
 
     def to_string(self):
         data_dictionary = {

@@ -155,7 +155,7 @@ class BasePage:
 
     def fill_form(self, elements_list, values_list):
         if len(elements_list) == len(values_list):
-            for i in range(len(elements_list) - 1):
+            for i in range(len(elements_list)):
                 try:
                     length = len(elements_list[i].text)
                     if length == 0:
