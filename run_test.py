@@ -12,5 +12,5 @@ class MyPlugin:
         print("\n\t*** test run reporting finishing")
 
 
-pytest.main(["--html", test_results_file.replace('_^1', ""), "--self-contained-html", "--browser", "chrome", "tests/steps/bvt/"], plugins=[MyPlugin()])
+pytest.main(["--html", test_results_file.replace('_^1', ""), "--self-contained-html", "--browser", "chrome", "tests/steps/bvt/test_bvt_01.py"], plugins=[MyPlugin()])
 #str(time.time_ns())

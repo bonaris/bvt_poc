@@ -1,7 +1,10 @@
-import unittest
+import pytest
 import boto3
 from pathlib import Path
 from utils import logger
+from utils.read_config import ReadConfig
+
+test_results_file = ReadConfig.get_test_results_filename()
 
 
 class TestExecutor(object):
@@ -12,25 +15,33 @@ class TestExecutor(object):
     def run_tests(testcase_class=None, browser='chrome', s3_bucket=None, test_type='bvt',
                   s3_prefix=None, run_id=None, mode=None):
 
-        loader = unittest.TestLoader()
+        initial_path = ReadConfig.get_value_by_keys("test-info", "initial_path")
+        suite = []
+        if test_type == 'e2e':
+            path = initial_path + 'e2e/'
+        else:
+            path = initial_path + 'bvt/'
+
         if testcase_class:
-            suite = unittest.TestSuite()
             tcs = testcase_class.split(",")
             for tc in tcs:
-                suite.addTests(loader.discover(start_dir='tests/steps', pattern=('*' + tc.strip() + '*'))._tests)
+                full_path = path + tc.strip()
+                suite.append(["--html", test_results_file.replace('_^1', ""), "--self-contained-html", "--browser", browser, full_path])
         else:
-            suite = loader.discover(start_dir='tests/steps', pattern='test*.py')
-        TestExecutor.set_params(suite, browser, s3_bucket, s3_prefix, run_id, mode)
+            suite.append(["--html", test_results_file.replace('_^1', ""), "--self-contained-html", "--browser", browser, path])
 
-        with open('/tmp/test-result.out', 'w') as f:
-            unittest.TextTestRunner(f, verbosity=2).run(suite)
+        for test_run in suite:
+            pytest.main(test_run)
 
-            for line in TestExecutor.test_results:
-                f.write(' | '.join(line) + '\n')
-                print(' | '.join(line) + '\n')
-            with open(logger.Logger.file_handler.baseFilename, 'r') as lf:
-                for line in lf:
-                    f.write(line)
+        # with open('/tmp/test-result.out', 'w') as f:
+        #     unittest.TextTestRunner(f, verbosity=2).run(suite)
+        #
+        #     for line in TestExecutor.test_results:
+        #         f.write(' | '.join(line) + '\n')
+        #         print(' | '.join(line) + '\n')
+        #     with open(logger.Logger.file_handler.baseFilename, 'r') as lf:
+        #         for line in lf:
+        #             f.write(line)
 
         if s3_bucket:
             TestExecutor.s3_client = boto3.client('s3') if TestExecutor.s3_client is None else TestExecutor.s3_client

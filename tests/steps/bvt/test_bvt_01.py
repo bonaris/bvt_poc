@@ -7,10 +7,12 @@ from validators.plp_validator import PlpValidator
 from validators.pdp_validator import PdpValidator
 from validators.cart_validator import CartValidator
 from pages.plp import PlpPage
+from pages.home_page import HomePage
 from utils.utils import Utils
 
 
 scenarios('../../features/bvt/bvt_01.feature', features_base_dir='tests/features/bvt/')
+
 
 default_wait_time = ReadConfig.get_max_wait_time()
 store_url = ReadConfig.get_url()
@@ -21,8 +23,9 @@ test_data_record = test_data.find_test_data(test_data_filename, 'BVT', 'bvt-01')
 @given('Z Gallerie website should be up and running')
 def open_home_page(driver, context):
     Logger.log_info(f"Navigating to {store_url} ***")
-    driver.get(store_url)
     context['driver'] = driver
+    context["home_page"] = HomePage(driver.get(store_url))
+    context["home_page"].check_for_newsletter_popup()
 
 
 @when('user provides Meganav to get to a PLP, for example "Tabletop > Serveware & Flatware"')
@@ -211,5 +214,5 @@ def click_quick_look(context):
 
 @then(u'Quick Look modal window is displayed')
 def quick_look_opened(context):
-    quick_look_modal = context['quick_look']
-    assert True
+    assert context['quick_look'] is not None
+

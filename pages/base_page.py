@@ -179,3 +179,13 @@ class BasePage:
     def get_random_valid_zip_code():
         return Utils.get_random_list_element(ReadConfig.get_value_by_keys("Constants", 'ZIP CODES'))
 
+    def check_for_newsletter_popup(self):
+        try:
+            popup = self.visible_clickable_new("Page", "on start popup", 2)
+            time.sleep(2)
+            if popup:
+                self.click_on_element("Page", "close pop up button", 2)
+                Logger.log_info("Removed newsletter popup")
+                time.sleep(2)
+        except Exception as e:
+            Logger.log_warning('No Newsletter signup box displayed. {}'.format(str(e)))
