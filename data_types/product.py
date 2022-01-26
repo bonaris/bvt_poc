@@ -35,7 +35,6 @@ class Product:
             "availability": self.availability,
             "quantity": self.quantity,
             "cart_total": self.cart_total,
-            "expected_total": self.get_expected_total(),
             "other_info": self.other_info
         }
         return str(data_dictionary)

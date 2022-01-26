@@ -83,7 +83,7 @@ def select_price(context):
 @then(u'Product List is updated based on the best match')
 def validate_filter(context):
     assert PlpValidator.validate_values(
-        len(context['plp_page'].update_product_list()),
+        len(context['plp_page'].refresh_product_list()),
         test_data_record.get("Filtered Products"),
         "Filtered Products"
     )
@@ -112,7 +112,7 @@ def validate_filter(context):
 @then(u'Product List is updated')
 def validate_filter(context):
     current_products_in_list = len(context['plp_page'].product_list)
-    context['plp_page'].update_product_list()
+    context['plp_page'].refresh_product_list()
     refreshed_products_in_list = len(context['plp_page'].product_list)
     assert PlpValidator.validate_is_not_equal(
         current_products_in_list,
@@ -139,7 +139,7 @@ def validate_filter(context):
 
 @then(u'Product List is the same as originally displayed')
 def validate_original_pl(context):
-    context['plp_page'].update_product_list()
+    context['plp_page'].refresh_product_list()
     assert PlpValidator.validate_products(context['plp_page'].product_list)
 
 
@@ -199,7 +199,7 @@ def validate_drop_down_cart(context):
 
 @when('user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"')
 def open_url(context):
-    full_url = store_url + test_data_record.get('Meganav1')
+    full_url = store_url + test_data_record.get('Meganav2')
     Logger.log_info(f"Navigating to {full_url} ***")
     context['driver'].get(full_url)
     time.sleep(default_wait_time//6)
@@ -207,12 +207,56 @@ def open_url(context):
 
 @when(u'user selects a product and clicks on Quick Look')
 def click_quick_look(context):
-    selected_product = Utils.get_random_list_element(context['plp_page'].product_list)
+    selected_product = context['plp_page'].select_bopis_item()         \
+    #Utils.get_random_list_element(context['plp_page'].product_list)
     Logger.log_info(f"Quick Look for product {selected_product.to_string()}.")
     context['quick_look'] = context['plp_page'].click_on_quick_look(product=selected_product)
 
 
 @then(u'Quick Look modal window is displayed')
 def quick_look_opened(context):
-    assert context['quick_look'] is not None
+    assert context['quick_look']
 
+
+@when(u'user clicks on Find in Store button')
+def click_find_in_store(context):
+    context["store_location"] = context['quick_look'].find_in_store()
+
+
+@then(u'Find In Store popup is displayed')
+def validate_find_in_store(context):
+    assert context['store_location']
+
+
+@when(u'user searches for pick up store location')
+def store_search(context):
+    zip_code = test_data_record.get('zip_code')
+    distance = test_data_record.get('distance')
+    context["store_location"].search_for_location(zip_code=zip_code, distance=distance)
+
+
+@then(u'list of available stores is displayed')
+def validate_find_location(context):
+    len(context['store_location'].locations) > 0
+
+
+@when(u'user selects location and adds product to the cart')
+def store_search(context):
+    context["store_location"].select_first_location()
+
+
+@when(u'selects to continue shopping')
+def keep_shopping(context):
+    context["store_location"].continue_shopping()
+
+
+@when(u'user performs incomplete search for the keyword and sorts products')
+def keep_shopping(context):
+    context["plp_page"].search(test_data_record.get('search_keyword'))
+    context['plp_page'].sort_products(test_data_record.get('sort_by'))
+    context['plp_page'].refresh()
+
+
+@then(u'PLP with results are displayed')
+def search_result(context):
+    assert context['plp_page']

@@ -23,7 +23,6 @@ class PlpPage(BasePage):
     filter_list_elements = []
     filter_list = []
     filter_label = None
-    filter_colors = {'Black': 'select Black', 'Gold': 'select Gold', 'Pink': 'select Pink', 'Grey': 'select Grey', 'White': 'select White'}
 
     def __init__(self, driver):
         self.driver = driver
@@ -34,7 +33,7 @@ class PlpPage(BasePage):
     def get_header_text(self):
         self.header_text = ""
         try:
-            self.header_text = self.visible_clickable_new("PLP_Page", "header", 5).text
+            self.header_text = self.visible_clickable_new("PLP_Page", "header", 2).text
         except Exception:
             Logger.log_warning("PLP Page: could not read header")
         return self.header_text
@@ -48,7 +47,7 @@ class PlpPage(BasePage):
             wait=max_wait_time
         )
 
-    def update_product_list(self):
+    def refresh_product_list(self):
         self.product_list = []
         try:
             quick_view_elements = self.get_quick_look_elements()
@@ -66,8 +65,8 @@ class PlpPage(BasePage):
 
     def get_filters(self):
         try:
-            self.filter_label = self.visible_clickable_new("PLP_Page", "filterLabel", 3)
-            total_elements = self.find_all_elements("PLP_Page", "filters", 3)
+            self.filter_label = self.visible_clickable_new("PLP_Page", "filterLabel", 2)
+            total_elements = self.find_all_elements("PLP_Page", "filters", 2)
             self.filter_list = []
             self.filter_list_elements = []
             for el in total_elements:
@@ -95,14 +94,14 @@ class PlpPage(BasePage):
 
     def refresh(self):
         self.get_header_text()
-        self.update_product_list()
+        self.refresh_product_list()
         self.get_filters()
         self.get_breadcrumbs_links()
 
     def get_current_filter(self):
         current_filter_elements = []
         try:
-            all_elements = self.find_all_elements("PLP_Page", "current filter", 4)
+            all_elements = self.find_all_elements("PLP_Page", "current filter", 2)
             for element in all_elements:
                 if len(element.text) > 0:
                     current_filter_elements.append(element)
@@ -135,9 +134,28 @@ class PlpPage(BasePage):
                 break
         return pdp_page
 
+    def select_bopis_item(self, attempts=12):
+        attempts_counter = 1
+        selected_product = None
+        for product in self.product_list:
+            self.click_on_quick_look(product=product)
+            time.sleep(max_wait_time//20)
+            if self.visible_clickable_new("PDP_Page", "find in store button", 1):
+                selected_product = product
+                self.click_on_element("PLP_Page", "ql close button", 1)
+                break
+            else:
+                self.click_on_element("PLP_Page", "ql close button", 1)
+            if attempts_counter <= attempts:
+                attempts_counter += 1
+            else:
+                break
+        time.sleep(max_wait_time//max_wait_time)
+        return selected_product
+
     def get_quick_look_elements(self):
         quick_look_elements = []
-        all_elements = self.find_all_elements("PLP_Page", "quick look elements", 3)
+        all_elements = self.find_all_elements("PLP_Page", "quick look elements", 2)
         for element in all_elements:
             if element.text == 'Quick Look':
                 quick_look_elements.append(element)
@@ -145,5 +163,10 @@ class PlpPage(BasePage):
 
     def click_on_quick_look(self, product):
         self.click_on_element_obj(element=product.quick_look_element)
+        time.sleep(2)
         ql_modal = PdpPage(driver=self.driver, product=product)
         return ql_modal
+
+    def sort_products(self, sort_by):
+        self.select_from_dropdown('PLP_Page', 'sort', sort_by, 3)
+        time.sleep(max_wait_time//6)

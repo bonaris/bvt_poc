@@ -4,6 +4,7 @@ from utils.logger import Logger
 from data_types.product import Product
 from pages.base_page import BasePage
 from pages.cart import Cart
+from pages.store_location_page import StoreLocation
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
@@ -20,7 +21,7 @@ class PdpPage(BasePage):
     def __init__(self, driver, product=Product()):
         self.driver = driver
         self.product = product
-        self.refresh()
+#        self.refresh()
 
     def refresh(self):
         try:
@@ -68,10 +69,14 @@ class PdpPage(BasePage):
         )
 
     def add_to_cart(self):
-        self.click_page_up()
-        if self.add_to_cart_button is None:
-            self.add_to_cart_button = self.visible_clickable_new("PDP_Page", "add to cart button")
-        self.click_on_element(self.add_to_cart_button)
+        self.click_on_element("PDP_Page", "add to cart button", 2)
         time.sleep(max_wait_time//5)
         cart = Cart(driver=self.driver, product=self.product)
         return cart
+
+    def find_in_store(self):
+        find_button = self.visible_clickable_new("PDP_Page", "find in store button", 2)
+        self.click_on_element_obj(find_button)
+        time.sleep(max_wait_time//20)
+        return StoreLocation(driver=self.driver, product=self.product)
+

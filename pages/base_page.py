@@ -7,7 +7,7 @@ from selenium.webdriver.common.keys import Keys
 from utils.read_config import ReadConfig
 from selenium.common.exceptions import TimeoutException
 from utils.utils import Utils
-
+from selenium.webdriver.support.ui import Select
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
@@ -175,6 +175,11 @@ class BasePage:
                 except Exception:
                     Logger.log_warning(f"Was not able to input value {values_list[i]}")
 
+    def select_from_dropdown(self, tab_name, key, value, wait=max_wait_time):
+        select = Select(self.visible_clickable_new(tab_name, key, wait))
+        select.select_by_visible_text(value)
+
+
     @staticmethod
     def get_random_valid_zip_code():
         return Utils.get_random_list_element(ReadConfig.get_value_by_keys("Constants", 'ZIP CODES'))
@@ -189,3 +194,14 @@ class BasePage:
                 time.sleep(2)
         except Exception as e:
             Logger.log_warning('No Newsletter signup box displayed. {}'.format(str(e)))
+
+    def search(self, text):
+        self.input_text(
+            tab_name="Page",
+            key="search input",
+            text=text,
+            field_length=15,
+            wait=max_wait_time//15
+        )
+        self.click_on_element("Page", "search button", max_wait_time//15)
+        time.sleep(max_wait_time//4)
