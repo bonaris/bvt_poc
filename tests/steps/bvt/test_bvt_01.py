@@ -17,7 +17,7 @@ scenarios('../../features/bvt/bvt_01.feature', features_base_dir='tests/features
 default_wait_time = ReadConfig.get_max_wait_time()
 store_url = ReadConfig.get_url()
 test_data_filename = ReadConfig.get_test_data_filename()
-test_data_record = test_data.find_test_data(test_data_filename, 'BVT', 'bvt-01')
+test_data_record = test_data.find_test_data(test_data_filename, 'BVT', 'bvt-01-tmp')
 
 
 @given('Z Gallerie website should be up and running')

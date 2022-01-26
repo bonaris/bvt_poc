@@ -22,10 +22,10 @@ Feature: Guest user should be able to add products to cart and checkout
 #    Then all filters are cleared
 #    And Product List is the same as originally displayed
 
-    When user scrolls down a page or two and selects a product by clicking on it
-    Then PDP page is displayed for selected product
-    And  And it is the same product as selected from PLP
-    And SKU of selected product is displayed
+#    When user scrolls down a page or two and selects a product by clicking on it
+#    Then PDP page is displayed for selected product
+#    And  And it is the same product as selected from PLP
+#    And SKU of selected product is displayed
 #
 #    When user clicks button Add to Cart
 #    Then drop down cart frame is displayed
