@@ -1,10 +1,10 @@
 import random
+import string
 import time
 import tempfile
 import os
 import sys
 import logging
-import boto3
 from pathlib import Path
 import datetime
 from selenium.webdriver.support.ui import WebDriverWait
@@ -124,3 +124,14 @@ class Utils():
         random_index = random.randint(0, total_elements - 1)
         return elements_list[random_index]
 
+    @staticmethod
+    def price_to_number(price):
+        return float(price.replace('$', ""))
+
+    @staticmethod
+    def get_random_string(length):
+        return ''.join(random.choice(string.ascii_letters) for i in range(length))
+
+    @staticmethod
+    def get_random_numeric_string(length):
+        return ''.join(random.choice('1234567890') for i in range(length))
