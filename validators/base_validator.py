@@ -41,8 +41,45 @@ class BaseValidator:
         expected = f'{field_name}: {value}'
         actual = f'{field_name}: {value}'
         Logger.log_info(f'Field value: {value}')
-        if len(value) <= 0:
+        if value is None:
             actual = f'{field_name} is empty'
         result = BaseValidator.validate_values(actual=actual, expected=expected, field_name=field_name)
         return result
 
+    @staticmethod
+    def validate_is_not_equal(value_1, value_2, field_name):
+        result = True
+        Logger.log_not_equal_validation(value_1=value_1, value_2=value_2, field=field_name)
+        if value_1 == value_2:
+            result = False
+            Logger.log_validation_error(field=field_name)
+        else:
+            Logger.log_info("\nPASS")
+        return result
+
+    @staticmethod
+    def validate_list(actual_list, expected_list, list_name, sort_first=False):
+        result = True
+        if sort_first:
+            actual_list.sort()
+            expected_list.sort()
+
+        if BaseValidator.validate_values(len(actual_list), len(expected_list), f"Total items in {list_name}"):
+            for i in range(len(actual_list)-1):
+                if BaseValidator.validate_values(actual_list[i], expected_list[i], f"List element: {str(i)}"):
+                    result = False
+        else:
+            result = False
+        return result
+
+    @staticmethod
+    def validate_breadcrumbs(actual_list, expected, separator='/'):
+        result = True
+        expected_list = expected.split(separator)
+
+        if BaseValidator.validate_values(len(actual_list), len(expected_list), "Total breadcrumbs items"):
+            if not BaseValidator.validate_values(str(actual_list), str(expected_list), "Breadcrumbs items"):
+                result = False
+        else:
+            result = False
+        return result

@@ -43,6 +43,14 @@ class Logger():
         LOGGER.info(Logger.get_log_string(string))
 
     @staticmethod
+    def log_not_equal_validation(value_1, value_2, field="values"):
+        string = f'\nValidating is not equal {field}'
+        string += f'\nValue 1: {value_1}'
+        string += f'\nValue 2: {value_2}'
+        LOGGER.info(Logger.get_log_string(string))
+
+
+    @staticmethod
     def log_validation_error(field="values"):
         string = f'\nValidation Failed {field}'
         LOGGER.error(Logger.get_log_string(string))

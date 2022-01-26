@@ -1,54 +1,79 @@
 class Address:
-    def __init__(self, find_by_list=None, values=None):
-        if values:
-            self.values = values
-            self.first_name = None
-            self.last_name = None
-            self.address_one = None
-            self.city = None
-            self.state = None
-            self.zip = None
-            self.phone = None
-        if find_by_list:
-            self.find_by_list = find_by_list
-            self.first_name_xpath = None
-            self.last_name_xpath = None
-            self.address_one_xpath = None
-            self.city_xpath = None
-            self.state_xpath = None
-            self.zip_xpath = None
-            self.phone_xpath = None
-            self.mapped_keys_xpath = None
-            self.mapped_keys = None
-        self.map_keys()
-        self.map_form_data()
+    test_data_record = None
+    first_name = None
+    last_name = None
+    line_one = None
+    line_two = None
+    city = None
+    state = None
+    zip = None
+    phone = None
 
-    def map_keys(self):
-        if self.values:
-            self.first_name = self.values.get("first_name")
-            self.last_name = self.values.get("last_name")
-            self.address_one = self.values.get("address_one")
-            self.city = self.values.get("city")
-            self.state = self.values.get("state")
-            self.zip = self.values.get("zip")
-            self.phone = self.values.get("phone")
+    address_header = None
 
-        if self.find_by_list:
-            self.first_name_xpath = self.find_by_list.get("first_name")
-            self.last_name_xpath = self.find_by_list.get("last_name")
-            self.address_one_xpath = self.find_by_list.get("address_one")
-            self.city_xpath = self.find_by_list.get("city")
-            self.state_xpath = self.find_by_list.get("state")
-            self.zip_xpath = self.find_by_list.get("zip")
-            self.phone_xpath = self.find_by_list.get("phone")
+    first_name_element = None
+    last_name_element = None
+    address_one_element = None
+    city_element = None
+    state_element = None
+    zip_element = None
+    phone_element = None
+
+    element_list = []
+
+    def __init__(self, elements=None, test_data_record=None):
+        if elements is not None:
+            self.map_form_data()
+        elif test_data_record is not None:
+            self.test_data_record = test_data_record
+            self.map_test_data(test_data_record)
+
+    def map_test_data(self, test_data_record):
+        self.first_name = test_data_record.get("first_name")
+        self.last_name = test_data_record.get("last_name")
+        self.line_one = test_data_record.get("line_1")
+        self.line_two = test_data_record.get("line_2")
+        self.city = test_data_record.get("city")
+        self.state = test_data_record.get("state")
+        self.zip = test_data_record.get("zip")
+        self.phone = test_data_record.get("phone")
 
     def map_form_data(self):
-        if self.values and self.find_by_list:
-            self.mapped_keys = [(self.first_name_xpath, self.first_name),
-                       (self.last_name_xpath, self.last_name),
-                       (self.address_one_xpath, self.address_one),
-                       (self.city_xpath, self.city),
-                       (self.state_xpath, self.state),
-                       (self.zip_xpath, self.zip),
-                       (self.phone_xpath, self.phone)]
+        pass
 
+    def map_account_shipping_address(self, address_string):
+        fields = address_string.split('\n')
+        self.first_name = fields[0].split(' ')[0]
+        self.last_name = fields[0].split(' ')[1]
+        if len(fields[0].split(' ')) > 2:
+            self.last_name = ' ' + fields[0].split(' ')[2]
+        self.line_one = fields[1]
+        self.city = fields[2].split(' ')[0]
+        self.state = fields[2].split(' ')[1]
+        self.zip = fields[2].split(' ')[2]
+        self.phone = fields[3]
+
+    def get_form_values(self):
+        return [
+            self.first_name,
+            self.last_name,
+            self.line_one,
+            self.line_two,
+            self.city,
+            self.state,
+            self.zip,
+            self.phone
+        ]
+
+    def to_string(self):
+        data_dictionary = {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "line_one": self.line_one,
+            "line_two": self.line_two,
+            "city": self.city,
+            "state": self.state,
+            "zip": self.zip,
+            "phone": self.phone
+        }
+        return str(data_dictionary)
