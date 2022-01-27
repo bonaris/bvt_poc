@@ -68,7 +68,7 @@ def validate_account_update(context):
 
 @when(u'user adds new shipping address')
 def account_info_update(context):
-    address_data = test_data.find_test_data(test_data_filename, 'Address', 'shipping')
+    address_data = test_data.find_test_data(test_data_filename, 'Address', 'new')
     address = Address(test_data_record=address_data)
     address.first_name = context['account_page'].account_info.first_name
     address.last_name = context['account_page'].account_info.last_name

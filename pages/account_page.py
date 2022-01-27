@@ -58,10 +58,10 @@ class AccountPage(BasePage):
         time.sleep(max_wait_time//6)
 
     def add_new_shipping_address(self, address):
-        add_button = self.find_all_elements("My_Account_Page", "add change shipping buttons", max_wait_time//15)[1]
+        add_button = self.find_all_elements("My_Account_Page", "add change address buttons", max_wait_time//15)[1]
         self.click_on_element_obj(add_button)
-        time.sleep(1)
-        all_controls = self.find_all_elements("My_Account_Page", "account info")
+#        self.switch_to_frame('Page', 'modal', max_wait_time//15)
+        all_controls = self.find_all_elements("My_Account_Page", "account info", max_wait_time//15)
         form_elements = [
             all_controls[16],
             all_controls[17],
@@ -74,8 +74,18 @@ class AccountPage(BasePage):
             all_controls[24]
         ]
         self.fill_form(form_elements, address.get_form_values())
-        self.click_on_element("My_Account_Page", "add shipping address button", 2)
         time.sleep(max_wait_time//15)
+        self.click_on_element("My_Account_Page", "add shipping address button", max_wait_time//10)
+        time.sleep(max_wait_time//15)
+        try:
+            self.click_on_element("My_Account_Page", "use this address button", max_wait_time//15)
+        except Exception:
+            pass
+        try:
+            self.click_on_element("My_Account_Page", "close new address button", max_wait_time//15)
+        except Exception:
+            pass
+        time.sleep(max_wait_time//10)
 
     def get_account_updated_msg(self):
         msg = None

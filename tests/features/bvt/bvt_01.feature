@@ -17,11 +17,11 @@ Feature: Guest user should be able to add products to cart and checkout
 #    When user clicks on price range link
 #    Then price range filter is cleared
 #    And Product List is updated
-
+#
 #    When user clicks on Clear All link
 #    Then all filters are cleared
 #    And Product List is the same as originally displayed
-
+#
 #    When user scrolls down a page or two and selects a product by clicking on it
 #    Then PDP page is displayed for selected product
 #    And  And it is the same product as selected from PLP
@@ -30,29 +30,33 @@ Feature: Guest user should be able to add products to cart and checkout
 #    When user clicks button Add to Cart
 #    Then drop down cart frame is displayed
 #    And price and total should be displayed and calculated as expected
-
+#
 #    And selects attributes like size & fabric, where applicable
 #    And an overlay should be displayed confirming the qty of product(s) added to cart
 
 
-#    When user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"
-#    Then PLP is displayed as per selection with expected header
-#    And Product Grid is displayed on the page
-#    And each product has a name, price and a "Quick Look" link
-#
-#    When user selects a product and clicks on Quick Look
-#    Then Quick Look modal window is displayed
-#
-#    When user clicks on Find in Store button
-#    Then Find In Store popup is displayed
-#
-#    When user searches for pick up store location
-#    Then list of available stores is displayed
-#
-#    When user selects location and adds product to the cart
-#    And selects to continue shopping
+    When user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"
+    Then PLP is displayed as per selection with expected header
+    And Product Grid is displayed on the page
+    And each product has a name, price and a "Quick Look" link
+
+    When user selects a product that is not on sale and clicks on Quick Look
+    Then Quick Look modal window is displayed
+
+    When user clicks on Find in Store button
+    Then Find In Store popup is displayed
+
+    When user searches for pick up store location
+    Then list of available stores is displayed
+
+    When user selects location and adds product to the cart
+    And selects to continue shopping
 #    And user performs incomplete search for the keyword and sorts products
-#    Then PLP with results are displayed
-  When user open shopping cart
-  And changes quantity for one of the products
-  And applies promotion code
+    Then PLP with results are displayed
+
+    When user opens shopping mini cart and updates quantity for one of the products
+    And clicks on View Cart button
+    Then full cart page is displayed
+
+#    And applies promotion code
+

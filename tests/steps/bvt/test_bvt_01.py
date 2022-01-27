@@ -7,9 +7,10 @@ from validators.plp_validator import PlpValidator
 from validators.pdp_validator import PdpValidator
 from validators.cart_validator import CartValidator
 from pages.plp import PlpPage
+from pages.cart import Cart
 from pages.home_page import HomePage
 from utils.utils import Utils
-
+from pages.top_user_menu import TopUserMenu
 
 scenarios('../../features/bvt/bvt_01.feature', features_base_dir='tests/features/bvt/')
 
@@ -17,7 +18,7 @@ scenarios('../../features/bvt/bvt_01.feature', features_base_dir='tests/features
 default_wait_time = ReadConfig.get_max_wait_time()
 store_url = ReadConfig.get_url()
 test_data_filename = ReadConfig.get_test_data_filename()
-test_data_record = test_data.find_test_data(test_data_filename, 'BVT', 'bvt-01-tmp')
+test_data_record = test_data.find_test_data(test_data_filename, 'BVT', 'bvt-01')
 
 
 @given('Z Gallerie website should be up and running')
@@ -205,10 +206,11 @@ def open_url(context):
     time.sleep(default_wait_time//6)
 
 
-@when(u'user selects a product and clicks on Quick Look')
+@when(u'user selects a product that is not on sale and clicks on Quick Look')
 def click_quick_look(context):
-    selected_product = context['plp_page'].select_bopis_item()         \
-    #Utils.get_random_list_element(context['plp_page'].product_list)
+    context['plp_page'].click_page_down(2)
+    context['plp_page'].refresh_product_list()
+    selected_product = context['plp_page'].select_bopis_item(sale=False)
     Logger.log_info(f"Quick Look for product {selected_product.to_string()}.")
     context['quick_look'] = context['plp_page'].click_on_quick_look(product=selected_product)
 
@@ -260,3 +262,22 @@ def keep_shopping(context):
 @then(u'PLP with results are displayed')
 def search_result(context):
     assert context['plp_page']
+
+
+@when(u'user opens shopping mini cart and updates quantity for one of the products')
+def open_mini_cart(context):
+    TopUserMenu(context['driver']).click_on_cart()
+    context['cart_page'] = Cart(context['driver'])
+    context['cart_page'].cart_items[0].update_quantity(2)
+    context['cart_page'].view_cart()
+
+
+@when(u'clicks on View Cart button')
+def open_mini_cart(context):
+    context['cart_page'].view_cart()
+    context['cart_page'] = Cart(context['driver'])
+
+
+@then(u'full cart page is displayed')
+def search_result(context):
+    assert context['cart_page']

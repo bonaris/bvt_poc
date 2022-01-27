@@ -29,7 +29,8 @@ class StoreLocation(BasePage):
     def search_for_location(self, zip_code, distance):
         self.input_text("Store_Location_Page", "zip code", zip_code, 2, max_wait_time//15)
         self.select_from_dropdown("Store_Location_Page", "distance", distance, max_wait_time//15)
-        self.click_on_element("Store_Location_Page", "search button", max_wait_time//15)
+        time.sleep(max_wait_time//15)
+        self.click_on_element("Store_Location_Page", "search button", max_wait_time//20)
         time.sleep(max_wait_time//15)
         locations_elements = self.find_all_elements("Store_Location_Page", 'store found', max_wait_time//15)
         if locations_elements and len(locations_elements) > 0:

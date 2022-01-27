@@ -15,8 +15,6 @@ def get_test_data_record(filename, row_index):
 @staticmethod
 def find_test_data(filename, tab_name, search_key):
     wb = xl.load_workbook(filename, read_only=True)
-
-    test_data = None
     sheet = wb[tab_name]
     row_index = 1
 

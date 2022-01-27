@@ -3,6 +3,7 @@ from utils.read_config import ReadConfig
 from data_types.product import Product
 from pages.base_page import BasePage
 from pages.sign_in_page import SignInPage
+from pages.cart import Cart
 from pages.top_user_menu import TopUserMenu
 from pages.account_page import AccountPage
 
@@ -24,3 +25,7 @@ class HomePage(BasePage):
         TopUserMenu(self.driver).click_on_my_account()
         time.sleep(max_wait_time//3)
         return AccountPage(driver=self.driver)
+
+    def top_user_menu_cart(self):
+        TopUserMenu(self.driver).click_on_cart()
+        time.sleep(max_wait_time//15)

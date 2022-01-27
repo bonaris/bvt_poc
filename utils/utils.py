@@ -126,7 +126,12 @@ class Utils():
 
     @staticmethod
     def price_to_number(price):
-        return float(price.replace('$', ""))
+        result = 0.0
+        try:
+            result = float(price.replace('$', ""))
+        except Exception:
+            pass
+        return result
 
     @staticmethod
     def get_random_string(length):

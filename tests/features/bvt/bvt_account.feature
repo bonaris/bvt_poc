@@ -6,8 +6,8 @@ Feature: Registered User should be able to Sign In from the Top User Menu and ac
     Then My Account Page is displayed
     And current user information is displayed
     And current shipping address info is displayed
-    When user updates Account information
-    Then information is updated successfully
+#    When user updates Account information
+#    Then information is updated successfully
 
     When user adds new shipping address
     Then 2 shipping addresses are displayed

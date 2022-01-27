@@ -43,15 +43,17 @@ class BasePage:
         return elem
 
     def click_on_element(self, tab_name, key, wait=max_wait_time):
+        element = self.visible_clickable_new(tab_name=tab_name, key=key, wait=wait)
         try:
-            element = self.visible_clickable_new(tab_name=tab_name, key=key, wait=wait)
             element.click()
         except Exception:
             try:
-                element = self.visible_clickable_new(tab_name=tab_name, key=key, wait=wait)
                 self.driver.execute_script("arguments[0].click();", element)
             except Exception:
-                Logger.log_warning(f'Could not click on {key} from {tab_name}')
+                try:
+                    element.submit()
+                except Exception:
+                    Logger.log_warning(f'Could not click on {key} from {tab_name}')
 
     def click_on_element_obj(self, element):
         try:

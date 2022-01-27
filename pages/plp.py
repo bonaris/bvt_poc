@@ -134,10 +134,20 @@ class PlpPage(BasePage):
                 break
         return pdp_page
 
-    def select_bopis_item(self, attempts=12):
+    def select_bopis_item(self, sale=None, attempts=12):
         attempts_counter = 1
         selected_product = None
+        filtered_product_list = []
+
         for product in self.product_list:
+            if sale is None:
+                filtered_product_list.append(product)
+            elif sale is True and product.sale_price is not None:
+                filtered_product_list.append(product)
+            elif sale is False and product.sale_price is None:
+                filtered_product_list.append(product)
+
+        for product in filtered_product_list:
             self.click_on_quick_look(product=product)
             time.sleep(max_wait_time//20)
             if self.visible_clickable_new("PDP_Page", "find in store button", 1):
