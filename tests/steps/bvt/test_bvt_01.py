@@ -275,7 +275,7 @@ def open_mini_cart(context):
 @when(u'clicks on View Cart button')
 def open_mini_cart(context):
     context['cart_page'].view_cart()
-    context['cart_page'] = Cart(context['driver'])
+    context['cart_page'].refresh()
 
 
 @then(u'full cart page is displayed')

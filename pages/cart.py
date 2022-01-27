@@ -41,13 +41,21 @@ class Cart(BasePage):
         delete_elements = self.find_all_elements("Cart_Page", "delete buttons", max_wait_time//15)
         item_subtotals = self.find_all_elements("Cart_Page", "item subtotals", max_wait_time//15)
 
+        if self.visible_clickable_new("Cart_Page", "checkout button top", max_wait_time//15):
+            subtotal_index = 0
+            step = 1
+        else:
+            subtotal_index = 1
+            step = 2
+
         self.cart_total = self.visible_clickable_new("Cart_Page", "cart total", 1).text
+
         try:
             self.cart_total_savings = self.visible_clickable_new("Cart_Page", "cart total savings", 1)
         except Exception:
             pass
 
-        subtotal_index = 1
+        self.cart_items = []
         for i in range(len(products_elements)):
             product = Product()
             product.map_from_drop_down_cart(products_elements[i])
@@ -64,7 +72,7 @@ class Cart(BasePage):
                 cart_item.sale_subtotal = subtotals[1]
 
             self.cart_items.append(cart_item)
-            subtotal_index += 2
+            subtotal_index += step
 
     def view_cart(self):
         self.click_on_element("Cart_Page", "view cart button", max_wait_time//15)
