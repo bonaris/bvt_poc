@@ -57,6 +57,26 @@ class AccountPage(BasePage):
         self.click_on_element("My_Account_Page", "update account button")
         time.sleep(max_wait_time//6)
 
+    def add_new_shipping_address(self, address):
+        add_button = self.find_all_elements("My_Account_Page", "add change shipping buttons", max_wait_time//15)[1]
+        self.click_on_element_obj(add_button)
+        time.sleep(1)
+        all_controls = self.find_all_elements("My_Account_Page", "account info")
+        form_elements = [
+            all_controls[16],
+            all_controls[17],
+            all_controls[18],
+            all_controls[19],
+            all_controls[20],
+            all_controls[21],
+            all_controls[22],
+            all_controls[23],
+            all_controls[24]
+        ]
+        self.fill_form(form_elements, address.get_form_values())
+        self.click_on_element("My_Account_Page", "add shipping address button", 2)
+        time.sleep(max_wait_time//15)
+
     def get_account_updated_msg(self):
         msg = None
         try:

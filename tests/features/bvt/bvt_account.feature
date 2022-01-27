@@ -4,12 +4,13 @@ Feature: Registered User should be able to Sign In from the Top User Menu and ac
     Given Z Gallerie website should be up and running
     When user clicks on Sign In at a Top User Menu and signs in with valid credentials
     Then My Account Page is displayed
-#    And current user information is displayed
-#    And current shipping address info is displayed
+    And current user information is displayed
+    And current shipping address info is displayed
     When user updates Account information
     Then information is updated successfully
 
-
+    When user adds new shipping address
+    Then 2 shipping addresses are displayed
 #    And Order section
 
 

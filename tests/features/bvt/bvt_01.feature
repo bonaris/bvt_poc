@@ -35,21 +35,24 @@ Feature: Guest user should be able to add products to cart and checkout
 #    And an overlay should be displayed confirming the qty of product(s) added to cart
 
 
-    When user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"
-    Then PLP is displayed as per selection with expected header
-    And Product Grid is displayed on the page
-    And each product has a name, price and a "Quick Look" link
-
-    When user selects a product and clicks on Quick Look
-    Then Quick Look modal window is displayed
-
-    When user clicks on Find in Store button
-    Then Find In Store popup is displayed
-
-    When user searches for pick up store location
-    Then list of available stores is displayed
-
-    When user selects location and adds product to the cart
-    And selects to continue shopping
-    And user performs incomplete search for the keyword and sorts products
-    Then PLP with results are displayed
+#    When user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"
+#    Then PLP is displayed as per selection with expected header
+#    And Product Grid is displayed on the page
+#    And each product has a name, price and a "Quick Look" link
+#
+#    When user selects a product and clicks on Quick Look
+#    Then Quick Look modal window is displayed
+#
+#    When user clicks on Find in Store button
+#    Then Find In Store popup is displayed
+#
+#    When user searches for pick up store location
+#    Then list of available stores is displayed
+#
+#    When user selects location and adds product to the cart
+#    And selects to continue shopping
+#    And user performs incomplete search for the keyword and sorts products
+#    Then PLP with results are displayed
+  When user open shopping cart
+  And changes quantity for one of the products
+  And applies promotion code

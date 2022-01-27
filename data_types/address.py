@@ -8,6 +8,7 @@ class Address:
     state = None
     zip = None
     phone = None
+    company_name = None
 
     address_header = None
 
@@ -57,6 +58,7 @@ class Address:
         return [
             self.first_name,
             self.last_name,
+            self.company_name,
             self.line_one,
             self.line_two,
             self.city,
