@@ -73,7 +73,7 @@ def account_info_update(context):
     address.first_name = context['account_page'].account_info.first_name
     address.last_name = context['account_page'].account_info.last_name
     address.company_name = "Karambulya"
-    address.state = test_data_record.get('full_state')
+    address.state = address.full_state
     context['account_page'].add_new_shipping_address(address)
 
 

@@ -9,6 +9,7 @@ class Address:
     zip = None
     phone = None
     company_name = None
+    full_state = None
 
     address_header = None
 
@@ -36,6 +37,7 @@ class Address:
         self.line_two = test_data_record.get("line_2")
         self.city = test_data_record.get("city")
         self.state = test_data_record.get("state")
+        self.full_state = test_data_record.get("full_state")
         self.zip = test_data_record.get("zip")
         self.phone = test_data_record.get("phone")
 
