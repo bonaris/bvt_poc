@@ -207,3 +207,7 @@ class BasePage:
         )
         self.click_on_element("Page", "search button", max_wait_time//15)
         time.sleep(max_wait_time//4)
+
+    def continue_shopping(self):
+        self.click_on_element("Store_Location_Page", "continue shopping", max_wait_time//15)
+        time.sleep(max_wait_time//20)

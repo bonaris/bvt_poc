@@ -275,9 +275,48 @@ def open_mini_cart(context):
 @when(u'clicks on View Cart button')
 def open_mini_cart(context):
     context['cart_page'].view_cart()
-    context['cart_page'].refresh()
 
 
-@then(u'full cart page is displayed')
-def search_result(context):
-    assert context['cart_page']
+@when(u'applies promo code')
+def promo_code(context):
+    valid_promo_code = test_data.find_test_data(test_data_filename, "Constants", "PROMO CODE").get('value')
+    context['cart_page'].apply_promo_code(valid_promo_code)
+#    context['cart_page'].refresh()
+
+
+@when(u'clicks on Checkout button and checks out as a guest')
+def click_checkout(context):
+    context['checkout_page'] = context['cart_page'].click_on_checkout()
+    context['checkout_page'].checkout_as_guest('bvt_guest@zgallerie.com')
+
+
+@when(u'user enters valid shipping address')
+def shipping_address(context):
+    address_data = test_data.find_test_data(test_data_filename, "Address", "billing")
+    context['checkout_page'].enter_shipping_address(address_data)
+
+
+
+@then(u'Checkout dialog is displayed')
+def checkout_dialog(context):
+    assert context['checkout_page']
+
+
+
+
+
+
+
+
+@when(u'user provides Meganav to get to a PLP, for example "Tabletop > Serveware & Flatware" tmp')
+def tmp(context):
+    full_url = store_url + test_data_record.get('Meganav1')
+    Logger.log_info(f"Navigating to {full_url} ***")
+    context['driver'].get(full_url)
+    time.sleep(default_wait_time//5)
+    context['plp_page'] = PlpPage(context['driver'])
+    selected_product = context['plp_page'].select_available_product()
+    Logger.log_info(f"Quick Look for product {selected_product.to_string()}.")
+    context['quick_look'] = context['plp_page'].click_on_quick_look(product=selected_product)
+    context['quick_look'].add_to_cart()
+    context["quick_look"].continue_shopping()

@@ -35,6 +35,10 @@ Feature: Guest user should be able to add products to cart and checkout
 #    And an overlay should be displayed confirming the qty of product(s) added to cart
 
 
+    # This section for now only
+    When user provides Meganav to get to a PLP, for example "Tabletop > Serveware & Flatware" tmp
+    ###############################
+
     When user provides Meganav to get to a PLP, for example "Home > Collections > $30 & Under"
     Then PLP is displayed as per selection with expected header
     And Product Grid is displayed on the page
@@ -56,7 +60,10 @@ Feature: Guest user should be able to add products to cart and checkout
 
     When user opens shopping mini cart and updates quantity for one of the products
     And clicks on View Cart button
-    Then full cart page is displayed
+    And applies promo code
+    And clicks on Checkout button and checks out as a guest
+    And user enters valid shipping address
+    Then Checkout dialog is displayed
 
 #    And applies promotion code
 

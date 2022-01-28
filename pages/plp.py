@@ -1,5 +1,4 @@
 import time
-
 import utils.excel_data_utils as locators
 from utils.read_config import ReadConfig
 from utils.logger import Logger
@@ -8,10 +7,12 @@ from utils.utils import Utils
 from data_types.product import Product
 from pages.base_page import BasePage
 from pages.pdp import PdpPage
+from random import randint
 
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
+test_data_filename = ReadConfig.get_test_data_filename()
 
 
 class PlpPage(BasePage):
@@ -114,25 +115,38 @@ class PlpPage(BasePage):
         self.click_on_element_obj(product_selected.element)
         return PdpPage(driver=self.driver, product=product_selected)
 
-    def find_and_click_on_available_product(self, attempts=3, gift_wrapping=False):
-        pdp_page = None
+    def select_available_product(self, sale=None, attempts=3, gift_wrapping=False):
         attempts_counter = 1
+        selected_product = None
+        filtered_product_list = []
+
         for product in self.product_list:
-            product.element.click()
-            time.sleep(max_wait_time//4)
-            pdp_page = PdpPage(driver=self.driver, product=product)
-            if "In Stock" in pdp_page.product.availability:
-                break
-            elif "Delivered in" in pdp_page.product.availability:
+            if sale is None:
+                filtered_product_list.append(product)
+            elif sale is True and product.sale_price is not None:
+                filtered_product_list.append(product)
+            elif sale is False and product.sale_price is None:
+                filtered_product_list.append(product)
+
+        for i in range(attempts):
+            index = randint(0, len(filtered_product_list) - 1)
+            product = filtered_product_list[index]
+            self.click_on_quick_look(product=product)
+            time.sleep(max_wait_time//20)
+            product_info = self.visible_clickable_new("PDP_Page", "ql product info").text
+            out_of_stock = locators.find_test_data(test_data_filename, "Constants", "OUT OF STOCK").get('value')
+            if out_of_stock not in product_info:
+                selected_product = product
+                self.click_on_element("PLP_Page", "ql close button", 1)
                 break
             else:
-                pdp_page = None
-                self.driver.back()
+                self.click_on_element("PLP_Page", "ql close button", 1)
             if attempts_counter <= attempts:
                 attempts_counter += 1
             else:
                 break
-        return pdp_page
+        time.sleep(max_wait_time//max_wait_time)
+        return selected_product
 
     def select_bopis_item(self, sale=None, attempts=12):
         attempts_counter = 1
@@ -147,7 +161,9 @@ class PlpPage(BasePage):
             elif sale is False and product.sale_price is None:
                 filtered_product_list.append(product)
 
-        for product in filtered_product_list:
+        for i in range(attempts):
+            index = randint(0, len(filtered_product_list) - 1)
+            product = filtered_product_list[index]
             self.click_on_quick_look(product=product)
             time.sleep(max_wait_time//20)
             if self.visible_clickable_new("PDP_Page", "find in store button", 1):

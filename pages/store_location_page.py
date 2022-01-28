@@ -46,7 +46,3 @@ class StoreLocation(BasePage):
         self.click_on_element("Store_Location_Page", "view cart", max_wait_time//15)
         time.sleep(max_wait_time//10)
         return Cart(self.driver, self.product)
-
-    def continue_shopping(self):
-        self.click_on_element("Store_Location_Page", "continue shopping", max_wait_time//15)
-        time.sleep(max_wait_time//20)

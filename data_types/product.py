@@ -77,6 +77,13 @@ class Product:
         self.name = values[0]
         self.cart_total = values[3]
 
+    def map_from_main_cart(self, element):
+        values = element.text.split('\n')
+        self.name = values[0].replace('\\', "")
+        self.sku = values[2]
+        self.availability = values[4]
+        self.cart_total = values[3]
+
     def get_expected_total(self):
         price = Utils.price_to_number(self.original_price)
         if self.quantity is None:
