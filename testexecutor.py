@@ -19,16 +19,17 @@ class TestExecutor(object):
         suite = []
         if test_type == 'e2e':
             path = initial_path + 'e2e/'
+            mode = 'e2e'
         else:
             path = initial_path + 'bvt/'
-
+            mode = 'bvt'
         if testcase_class:
             tcs = testcase_class.split(",")
             for tc in tcs:
                 full_path = path + tc.strip()
-                suite.append(["--html", test_results_file.replace('_^1', ""), "--self-contained-html", "--browser", browser, full_path])
+                suite.append(["--html", test_results_file.replace('^1', ""), "--html-report", test_results_file.replace('^1', mode), "--self-contained-html", "--browser", browser, full_path])
         else:
-            suite.append(["--html", test_results_file.replace('_^1', ""), "--self-contained-html", "--browser", browser, path])
+            suite.append(["--html", test_results_file.replace('^1', ""), "--html-report", test_results_file.replace('^1', mode), "--self-contained-html", "--browser", browser, path])
 
         for test_run in suite:
             pytest.main(test_run)

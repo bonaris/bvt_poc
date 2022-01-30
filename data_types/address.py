@@ -69,6 +69,19 @@ class Address:
             self.phone
         ]
 
+    def get_shipping_details_form_values(self):
+        return [
+            self.first_name,
+            self.last_name,
+            self.line_one,
+            self.line_two,
+            self.city,
+            self.state,
+            self.zip,
+            self.phone
+        ]
+
+
     def to_string(self):
         data_dictionary = {
             "first_name": self.first_name,

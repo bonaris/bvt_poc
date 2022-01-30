@@ -19,7 +19,7 @@ class BasePage:
     breadcrumbs_list = []
     breadcrumbs_list_elements = {}
 
-    def switch_v2_co_iframe(self, by='xpath', locator="//*[@id='checkoutV2']", wait=max_wait_time):
+    def switch_v2_co_iframe(self, by='id', locator="checkoutV2", wait=max_wait_time):
         try:
             WebDriverWait(self.driver, wait).until(EC.frame_to_be_available_and_switch_to_it((by, locator)))
         except Exception as e:
@@ -121,7 +121,7 @@ class BasePage:
                 f'Could not find element {element}.')
 
     def get_breadcrumbs_links(self):
-        elements = self.find_all_elements("Page", "breadcrumb")
+        elements = self.find_all_elements("Page", "breadcrumb", max_wait_time//15)
         self.breadcrumbs_list = []
         for element in elements:
             if len(element.text) > 0:
@@ -155,7 +155,7 @@ class BasePage:
             Logger.log_error(f'Element {key} from tab {tab_name} is not present.')
         return element
 
-    def fill_form(self, elements_list, values_list):
+    def fill_form(self, elements_list, values_list, wait=1):
         if len(elements_list) == len(values_list):
             for i in range(len(elements_list)):
                 try:
@@ -173,9 +173,10 @@ class BasePage:
                             text=str(values_list[i]),
                             field_length=length
                         )
-                        time.sleep(1)
+                        time.sleep(wait)
                 except Exception:
                     Logger.log_warning(f"Was not able to input value {values_list[i]}")
+            time.sleep(wait)
 
     def select_from_dropdown(self, tab_name, key, value, wait=max_wait_time):
         select = Select(self.visible_clickable_new(tab_name, key, wait))

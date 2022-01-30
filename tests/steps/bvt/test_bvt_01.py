@@ -11,6 +11,7 @@ from pages.cart import Cart
 from pages.home_page import HomePage
 from utils.utils import Utils
 from pages.top_user_menu import TopUserMenu
+from pytest_html_reporter import attach
 
 scenarios('../../features/bvt/bvt_01.feature', features_base_dir='tests/features/bvt/')
 
@@ -294,11 +295,12 @@ def click_checkout(context):
 def shipping_address(context):
     address_data = test_data.find_test_data(test_data_filename, "Address", "billing")
     context['checkout_page'].enter_shipping_address(address_data)
-
+    context['checkout_page'].pay_with_pay_pal("paypal_data")
 
 
 @then(u'Checkout dialog is displayed')
 def checkout_dialog(context):
+    attach(context['driver'].get_screenshot_as_png())
     assert context['checkout_page']
 
 

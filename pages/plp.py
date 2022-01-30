@@ -52,7 +52,7 @@ class PlpPage(BasePage):
         self.product_list = []
         try:
             quick_view_elements = self.get_quick_look_elements()
-            self.product_grid_elements = self.find_all_elements("PLP_Page", "productList", 3)
+            self.product_grid_elements = self.find_all_elements("PLP_Page", "productList", 2)
             i = 0
             for product_element in self.product_grid_elements:
                 product = Product()
@@ -181,7 +181,7 @@ class PlpPage(BasePage):
 
     def get_quick_look_elements(self):
         quick_look_elements = []
-        all_elements = self.find_all_elements("PLP_Page", "quick look elements", 2)
+        all_elements = self.find_all_elements("PLP_Page", "quick look elements", 1)
         for element in all_elements:
             if element.text == 'Quick Look':
                 quick_look_elements.append(element)
