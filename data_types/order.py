@@ -1,6 +1,7 @@
 from utils.utils import Utils
 from utils.logger import Logger
 
+
 class Order:
 
     number = None

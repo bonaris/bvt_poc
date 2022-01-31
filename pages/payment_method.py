@@ -32,14 +32,14 @@ class PaymentMethod(BasePage):
             all_elements[7]
         ]
 
-    def pay_with_paypal(self, pay_pal_data):
+    def pay_with_paypal(self, user):
 #        self.switch_v2_co_iframe()
         radio_buttons = self.find_all_elements("Payment_Method", "payment type radio buttons", max_wait_time//15)
         self.click_on_element_obj(radio_buttons[1])
         time.sleep(1)
         pay_pall_buttons = self.find_all_elements("Payment_Method", "checkout with paypal buttons", max_wait_time//15)
         self.click_on_element_obj(pay_pall_buttons[0])
-        time.sleep(max_wait_time//5)
+        time.sleep(max_wait_time//2)
         try:
             WebDriverWait(self.driver, max_wait_time).until(EC.number_of_windows_to_be(2))
         except Exception as e:
@@ -48,3 +48,15 @@ class PaymentMethod(BasePage):
         switchback_window = self.driver.window_handles[0]
         self.driver.switch_to_window(self.driver.window_handles[1])
         time.sleep(1)
+        self.input_text("Payment_Method", "paypal email input", user.email, 30, max_wait_time//15)
+        self.click_on_element("Payment_Method", "paypal next button", max_wait_time//2)
+        time.sleep(max_wait_time//8)
+        self.input_text("Payment_Method", "paypal password", user.password, 20, max_wait_time//15)
+        self.click_on_element("Payment_Method", "paypal login button", max_wait_time//2)
+        time.sleep(max_wait_time//8)
+        self.click_page_down(2)
+        self.click_on_element("Payment_Method", "paypal pay now button", max_wait_time//2)
+        time.sleep(max_wait_time//2)
+        self.driver.switch_to_window(switchback_window)
+        time.sleep(1)
+

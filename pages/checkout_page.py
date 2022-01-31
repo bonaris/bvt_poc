@@ -2,8 +2,10 @@ import time
 from pages.base_page import BasePage
 from pages.payment_method import PaymentMethod
 from data_types.address import Address
+from data_types.order import Order
+from utils.logger import Logger
 from utils.read_config import ReadConfig
-
+from pytest_html_reporter import attach
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
@@ -17,6 +19,7 @@ class CheckoutPage(BasePage):
         self.driver = driver
         self.payment = PaymentMethod(driver)
         self.refresh()
+        self.order = None
 
     def checkout_as_guest(self, email):
         self.switch_v2_co_iframe(wait=max_wait_time/15)
@@ -46,5 +49,14 @@ class CheckoutPage(BasePage):
     def refresh(self):
         pass
 
-    def pay_with_pay_pal(self, paypal_data):
-        self.payment.pay_with_paypal(paypal_data)
+    def pay_with_pay_pal(self, user):
+        try:
+            self.payment.pay_with_paypal(user)
+            time.sleep(max_wait_time//2)
+            self.switch_to_frame("Checkout_Page", "order iframe", max_wait_time//15)
+            self.order = Order()
+            self.order.number = self.visible_clickable_new("Checkout_Page", "order number", wait=max_wait_time//15).text
+        except Exception:
+            attach(self.driver.get_screenshot_as_png())
+            Logger.log_error("PAYPAL PAY: Order is not displayed.")
+

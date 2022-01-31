@@ -8,6 +8,7 @@ from validators.pdp_validator import PdpValidator
 from validators.cart_validator import CartValidator
 from pages.plp import PlpPage
 from pages.cart import Cart
+from data_types.user import User
 from pages.home_page import HomePage
 from utils.utils import Utils
 from pages.top_user_menu import TopUserMenu
@@ -294,14 +295,16 @@ def click_checkout(context):
 @when(u'user enters valid shipping address')
 def shipping_address(context):
     address_data = test_data.find_test_data(test_data_filename, "Address", "billing")
+    pay_pal_user = User(test_data.find_test_data(test_data_filename, "User", "pay pal"))
     context['checkout_page'].enter_shipping_address(address_data)
-    context['checkout_page'].pay_with_pay_pal("paypal_data")
+    context['checkout_page'].pay_with_pay_pal(pay_pal_user)
 
 
 @then(u'Checkout dialog is displayed')
 def checkout_dialog(context):
+#    attach(context['driver'].get_screenshot_as_png())
     attach(context['driver'].get_screenshot_as_png())
-    assert context['checkout_page']
+    assert not context['checkout_page']
 
 
 
@@ -321,4 +324,5 @@ def tmp(context):
     Logger.log_info(f"Quick Look for product {selected_product.to_string()}.")
     context['quick_look'] = context['plp_page'].click_on_quick_look(product=selected_product)
     context['quick_look'].add_to_cart()
+    attach(context['driver'].get_screenshot_as_png())
     context["quick_look"].continue_shopping()
