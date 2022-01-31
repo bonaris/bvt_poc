@@ -56,6 +56,18 @@ class Address:
         self.zip = fields[2].split(' ')[2]
         self.phone = fields[3]
 
+    def map_checkout_billing_address(self, address_string):
+        fields = address_string.split('\n')
+        self.first_name = fields[0].split(' ')[0]
+        self.last_name = fields[0].split(' ')[1]
+        if len(fields[0].split(' ')) > 2:
+            self.last_name = ' ' + fields[0].split(' ')[2]
+        self.line_one = fields[1]
+        self.city = fields[2].split(',')[0]
+        self.state = fields[2].split(',')[1]
+        self.zip = fields[2].split(',')[2]
+
+
     def get_form_values(self):
         return [
             self.first_name,

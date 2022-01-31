@@ -14,12 +14,15 @@ max_wait_time = ReadConfig.get_max_wait_time()
 class CheckoutPage(BasePage):
 
     payment = None
+    cart_items = []
+    order = None
 
-    def __init__(self, driver):
+    def __init__(self, driver, cart_items=None):
         self.driver = driver
         self.payment = PaymentMethod(driver)
         self.refresh()
-        self.order = None
+        if cart_items:
+            self.cart_items = cart_items
 
     def checkout_as_guest(self, email):
         self.switch_v2_co_iframe(wait=max_wait_time/15)
@@ -52,10 +55,14 @@ class CheckoutPage(BasePage):
     def pay_with_pay_pal(self, user):
         try:
             self.payment.pay_with_paypal(user)
-            time.sleep(max_wait_time//2)
-            self.switch_to_frame("Checkout_Page", "order iframe", max_wait_time//15)
+            time.sleep(max_wait_time)
+            self.switch_to_frame("Checkout_Page", "order iframe", max_wait_time//6)
             self.order = Order()
             self.order.number = self.visible_clickable_new("Checkout_Page", "order number", wait=max_wait_time//15).text
+            billing_address = Address()
+            billing_address_string = self.visible_clickable_new("Checkout_Page", "billing address", wait=max_wait_time//15).text
+            billing_address.map_checkout_billing_address(billing_address_string)
+            self.order.billing_address = billing_address
         except Exception:
             attach(self.driver.get_screenshot_as_png())
             Logger.log_error("PAYPAL PAY: Order is not displayed.")

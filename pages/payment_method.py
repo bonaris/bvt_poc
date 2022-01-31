@@ -33,7 +33,6 @@ class PaymentMethod(BasePage):
         ]
 
     def pay_with_paypal(self, user):
-#        self.switch_v2_co_iframe()
         radio_buttons = self.find_all_elements("Payment_Method", "payment type radio buttons", max_wait_time//15)
         self.click_on_element_obj(radio_buttons[1])
         time.sleep(1)

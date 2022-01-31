@@ -9,6 +9,8 @@ class Order:
     status = None
     shipping_status = None
     total = None
+    billing_address = None
+    shipping_address = None
 
     def __init__(self):
         self.number = None

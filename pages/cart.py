@@ -113,5 +113,5 @@ class Cart(BasePage):
         else:
             self.click_on_element("Cart_Page", "checkout button bottom")
         time.sleep(max_wait_time//3)
-        return CheckoutPage(self.driver)
+        return CheckoutPage(self.driver, self.cart_items)
 

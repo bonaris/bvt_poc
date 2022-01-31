@@ -11,6 +11,7 @@ from selenium.webdriver.support.ui import Select
 
 locators_file = ReadConfig.get_locators_filename()
 max_wait_time = ReadConfig.get_max_wait_time()
+iframe_locator = locators.find_test_data(locators_file, "Checkout_Page", "checkout iframe")
 
 
 class BasePage:
@@ -19,7 +20,7 @@ class BasePage:
     breadcrumbs_list = []
     breadcrumbs_list_elements = {}
 
-    def switch_v2_co_iframe(self, by='id', locator="checkoutV2", wait=max_wait_time):
+    def switch_v2_co_iframe(self, by=iframe_locator.get('By'), locator=iframe_locator.get('locator'), wait=max_wait_time):
         try:
             WebDriverWait(self.driver, wait).until(EC.frame_to_be_available_and_switch_to_it((by, locator)))
         except Exception as e:

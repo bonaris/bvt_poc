@@ -299,12 +299,11 @@ def shipping_address(context):
     context['checkout_page'].enter_shipping_address(address_data)
     context['checkout_page'].pay_with_pay_pal(pay_pal_user)
 
-
 @then(u'Checkout dialog is displayed')
 def checkout_dialog(context):
 #    attach(context['driver'].get_screenshot_as_png())
     attach(context['driver'].get_screenshot_as_png())
-    assert not context['checkout_page']
+    assert context['checkout_page']
 
 
 
