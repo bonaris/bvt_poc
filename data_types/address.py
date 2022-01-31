@@ -49,7 +49,7 @@ class Address:
         self.first_name = fields[0].split(' ')[0]
         self.last_name = fields[0].split(' ')[1]
         if len(fields[0].split(' ')) > 2:
-            self.last_name = ' ' + fields[0].split(' ')[2]
+            self.last_name += ' ' + fields[0].split(' ')[2]
         self.line_one = fields[1]
         self.city = fields[2].split(' ')[0]
         self.state = fields[2].split(' ')[1]
@@ -61,11 +61,22 @@ class Address:
         self.first_name = fields[0].split(' ')[0]
         self.last_name = fields[0].split(' ')[1]
         if len(fields[0].split(' ')) > 2:
-            self.last_name = ' ' + fields[0].split(' ')[2]
+            self.last_name += ' ' + fields[0].split(' ')[2]
         self.line_one = fields[1]
         self.city = fields[2].split(',')[0]
         self.state = fields[2].split(',')[1]
         self.zip = fields[2].split(',')[2]
+
+    def map_order_address(self, address_string):
+        fields = address_string.split(',')
+        self.first_name = fields[0].split(' ')[0]
+        self.last_name = fields[0].split(' ')[1]
+        if len(fields[0].split(' ')) > 2:
+            self.last_name += ' ' + fields[0].split(' ')[2]
+        self.line_one = fields[1]
+        self.city = fields[2]
+        self.state = fields[3]
+        self.zip = fields[4]
 
 
     def get_form_values(self):

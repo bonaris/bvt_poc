@@ -60,9 +60,19 @@ class CheckoutPage(BasePage):
             self.order = Order()
             self.order.number = self.visible_clickable_new("Checkout_Page", "order number", wait=max_wait_time//15).text
             billing_address = Address()
-            billing_address_string = self.visible_clickable_new("Checkout_Page", "billing address", wait=max_wait_time//15).text
-            billing_address.map_checkout_billing_address(billing_address_string)
-            self.order.billing_address = billing_address
+            shipping_address = Address()
+            pickup_address = Address()
+            address_elements = self.find_all_elements("Checkout_Page", "billing address", wait=max_wait_time//15)
+            if address_elements > 0:
+                billing_address.map_checkout_billing_address(address_elements[0].text)
+                self.order.billing_address = billing_address
+            if address_elements > 1:
+                shipping_address.map_order_address(address_elements[1].text)
+                self.order.shipping_address = shipping_address
+            if address_elements > 2:
+                pickup_address.map_order_address(address_elements[2].text)
+                self.order.pickup_address = pickup_address
+
         except Exception:
             attach(self.driver.get_screenshot_as_png())
             Logger.log_error("PAYPAL PAY: Order is not displayed.")

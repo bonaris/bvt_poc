@@ -11,6 +11,7 @@ class Order:
     total = None
     billing_address = None
     shipping_address = None
+    pickup_address = None
 
     def __init__(self):
         self.number = None
